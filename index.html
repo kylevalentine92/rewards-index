@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SA Rewards Complication Index</title>
+<meta name="description" content="How hard is it to get the value South African rewards programmes promise? 30 programmes scored on effort, by persona.">
+<meta property="og:title" content="SA Rewards Complication Index">
+<meta property="og:description" content="30 South African rewards programmes scored on how hard they are to get full value from.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23b4322b'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='white' font-family='Georgia'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:wght@400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+:root {
+  --font-anthropic-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-anthropic-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --color-bg: #faf9f6; --color-panel: #ffffff; --color-fg: #1f1e1c; --color-fg-muted: #6b6862;
+  --color-border-line: #e6e3dc; --color-ok: #2f7d4f; --color-warn: #9a6a00; --color-bad: #b4322b;
+  --cds-chart-muted: #d9d4ca; --cds-chart-status-critical: #b4322b; --cds-chart-grid: #ebe8e1;
+  --cds-chart-axis: #b9b4aa; --cds-chart-reference: #8a857b;
+  --cds-surface-popover: #ffffff; --cds-border: #e0dcd3; --cds-shadow-popover: 0 6px 24px rgba(0,0,0,.12);
+  --cds-text-secondary: #6b6862;
+  --c1: #3b6fb6; --c2: #2f8f6b; --c3: #c07a2c; --c4: #8a4fb0; --c5: #c2477a; --c6: #4a9bb0; --c7: #8a8f3a; --c8: #6b6862;
+  --cds-font-size-caption: 0.8125rem; --cds-font-size-body: 0.9375rem; --cds-font-size-heading: 1.0625rem; --cds-font-size-title: 1.875rem;
+  --cds-font-weight-medium: 600;
+  --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 16px; --cds-gap-lg: 24px; --cds-gap-xl: 40px;
+  --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 20px; --cds-pad-xl: 32px;
+  --cds-radius: 10px; --cds-dur-slow: 320ms; --cds-ease-out: cubic-bezier(.2,.8,.2,1);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #191816; --color-panel: #22211e; --color-fg: #ecebe7; --color-fg-muted: #a39f97;
+    --color-border-line: #34322e; --color-ok: #6cc596; --color-warn: #e0b04f; --color-bad: #ef7a72;
+    --cds-chart-muted: #45423c; --cds-chart-status-critical: #e5615a; --cds-chart-grid: #2f2d29;
+    --cds-chart-axis: #5d5a53; --cds-chart-reference: #8a857b;
+    --cds-surface-popover: #2a2925; --cds-border: #3d3a35; --cds-shadow-popover: 0 6px 24px rgba(0,0,0,.5);
+    --cds-text-secondary: #a39f97;
+    --c1: #7aa7e6; --c2: #5fc29a; --c3: #e3a25c; --c4: #b88ad9; --c5: #e47ea6; --c6: #78c3d6; --c7: #bfc46a; --c8: #a39f97;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); font-family: var(--font-anthropic-sans); -webkit-font-smoothing: antialiased; }
+#dash-root { --dash-gutter: clamp(16px, 3vw, 40px); padding: 28px var(--dash-gutter) 48px; }
+.dash-skeleton { color: transparent; background: var(--color-border-line); border-radius: 6px; }
+.site-foot { max-width: 1180px; margin: 32px auto 0; padding-top: 16px; border-top: 1px solid var(--color-border-line); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; }
+.site-foot button { font: inherit; color: var(--color-fg); background: none; border: 1px solid var(--color-border-line); border-radius: 8px; padding: 4px 10px; cursor: pointer; }
+</style>
+<script type="application/json" id="rc-data">{"scores":[{"program":"FNB eBucks","category":"Banking","persona":"entry","score":80,"band":"Maze","habit":5.0},{"program":"FNB eBucks","category":"Banking","persona":"mass","score":80,"band":"Maze","habit":5.0},{"program":"FNB eBucks","category":"Banking","persona":"middle","score":80,"band":"Maze","habit":4.87},{"program":"FNB eBucks","category":"Banking","persona":"affluent","score":73,"band":"Complex","habit":3.05},{"program":"FNB eBucks","category":"Banking","persona":"overall","score":78,"band":"Maze","habit":4.48},{"program":"Discovery Vitality","category":"Wellness & insurance","persona":"entry","score":76,"band":"Maze","habit":5.0},{"program":"Discovery Vitality","category":"Wellness & insurance","persona":"mass","score":75,"band":"Complex","habit":4.76},{"program":"Discovery Vitality","category":"Wellness & insurance","persona":"middle","score":71,"band":"Complex","habit":3.72},{"program":"Discovery Vitality","category":"Wellness & insurance","persona":"affluent","score":69,"band":"Complex","habit":3.1},{"program":"Discovery Vitality","category":"Wellness & insurance","persona":"overall","score":73,"band":"Complex","habit":4.14},{"program":"Momentum Multiply","category":"Wellness & insurance","persona":"entry","score":76,"band":"Maze","habit":4.66},{"program":"Momentum Multiply","category":"Wellness & insurance","persona":"mass","score":74,"band":"Complex","habit":4.06},{"program":"Momentum Multiply","category":"Wellness & insurance","persona":"middle","score":71,"band":"Complex","habit":3.27},{"program":"Momentum Multiply","category":"Wellness & insurance","persona":"affluent","score":69,"band":"Complex","habit":2.79},{"program":"Momentum Multiply","category":"Wellness & insurance","persona":"overall","score":73,"band":"Complex","habit":3.69},{"program":"Standard Bank UCount","category":"Banking","persona":"entry","score":76,"band":"Maze","habit":5.0},{"program":"Standard Bank UCount","category":"Banking","persona":"mass","score":76,"band":"Maze","habit":5.0},{"program":"Standard Bank UCount","category":"Banking","persona":"middle","score":70,"band":"Complex","habit":3.42},{"program":"Standard Bank UCount","category":"Banking","persona":"affluent","score":65,"band":"Complex","habit":1.95},{"program":"Standard Bank UCount","category":"Banking","persona":"overall","score":72,"band":"Complex","habit":3.84},{"program":"Discovery Bank","category":"Banking","persona":"entry","score":74,"band":"Complex","habit":5.0},{"program":"Discovery Bank","category":"Banking","persona":"mass","score":74,"band":"Complex","habit":5.0},{"program":"Discovery Bank","category":"Banking","persona":"middle","score":68,"band":"Complex","habit":3.42},{"program":"Discovery Bank","category":"Banking","persona":"affluent","score":62,"band":"Complex","habit":1.95},{"program":"Discovery Bank","category":"Banking","persona":"overall","score":69,"band":"Complex","habit":3.84},{"program":"Absa Rewards","category":"Banking","persona":"entry","score":65,"band":"Complex","habit":5.0},{"program":"Absa Rewards","category":"Banking","persona":"mass","score":65,"band":"Complex","habit":5.0},{"program":"Absa Rewards","category":"Banking","persona":"middle","score":65,"band":"Complex","habit":5.0},{"program":"Absa Rewards","category":"Banking","persona":"affluent","score":61,"band":"Complex","habit":3.88},{"program":"Absa Rewards","category":"Banking","persona":"overall","score":64,"band":"Complex","habit":4.72},{"program":"SAA Voyager","category":"Travel & hospitality","persona":"entry","score":67,"band":"Complex","habit":3.1},{"program":"SAA Voyager","category":"Travel & hospitality","persona":"mass","score":65,"band":"Complex","habit":2.69},{"program":"SAA Voyager","category":"Travel & hospitality","persona":"middle","score":63,"band":"Complex","habit":2.08},{"program":"SAA Voyager","category":"Travel & hospitality","persona":"affluent","score":60,"band":"Complex","habit":1.45},{"program":"SAA Voyager","category":"Travel & hospitality","persona":"overall","score":64,"band":"Complex","habit":2.33},{"program":"Marriott Bonvoy (Protea)","category":"Travel & hospitality","persona":"entry","score":62,"band":"Complex","habit":3.58},{"program":"Marriott Bonvoy (Protea)","category":"Travel & hospitality","persona":"mass","score":62,"band":"Complex","habit":3.45},{"program":"Marriott Bonvoy (Protea)","category":"Travel & hospitality","persona":"middle","score":59,"band":"Complex","habit":2.81},{"program":"Marriott Bonvoy (Protea)","category":"Travel & hospitality","persona":"affluent","score":55,"band":"Manageable","habit":1.77},{"program":"Marriott Bonvoy (Protea)","category":"Travel & hospitality","persona":"overall","score":60,"band":"Complex","habit":2.9},{"program":"Sanlam Reality","category":"Wellness & insurance","persona":"entry","score":64,"band":"Complex","habit":5.0},{"program":"Sanlam Reality","category":"Wellness & insurance","persona":"mass","score":62,"band":"Complex","habit":4.53},{"program":"Sanlam Reality","category":"Wellness & insurance","persona":"middle","score":58,"band":"Complex","habit":3.5},{"program":"Sanlam Reality","category":"Wellness & insurance","persona":"affluent","score":56,"band":"Complex","habit":2.82},{"program":"Sanlam Reality","category":"Wellness & insurance","persona":"overall","score":60,"band":"Complex","habit":3.96},{"program":"Investec Rewards","category":"Banking","persona":"entry","score":55,"band":"Manageable","habit":5.0},{"program":"Investec Rewards","category":"Banking","persona":"mass","score":55,"band":"Manageable","habit":4.95},{"program":"Investec Rewards","category":"Banking","persona":"middle","score":48,"band":"Manageable","habit":3.19},{"program":"Investec Rewards","category":"Banking","persona":"affluent","score":43,"band":"Manageable","habit":1.83},{"program":"Investec Rewards","category":"Banking","persona":"overall","score":50,"band":"Manageable","habit":3.74},{"program":"Woolworths MyDifference","category":"Grocery","persona":"entry","score":51,"band":"Manageable","habit":2.52},{"program":"Woolworths MyDifference","category":"Grocery","persona":"mass","score":49,"band":"Manageable","habit":2.11},{"program":"Woolworths MyDifference","category":"Grocery","persona":"middle","score":47,"band":"Manageable","habit":1.59},{"program":"Woolworths MyDifference","category":"Grocery","persona":"affluent","score":46,"band":"Manageable","habit":1.28},{"program":"Woolworths MyDifference","category":"Grocery","persona":"overall","score":48,"band":"Manageable","habit":1.88},{"program":"Nedbank Greenbacks","category":"Banking","persona":"entry","score":52,"band":"Manageable","habit":5.0},{"program":"Nedbank Greenbacks","category":"Banking","persona":"mass","score":50,"band":"Manageable","habit":4.37},{"program":"Nedbank Greenbacks","category":"Banking","persona":"middle","score":45,"band":"Manageable","habit":2.95},{"program":"Nedbank Greenbacks","category":"Banking","persona":"affluent","score":40,"band":"Manageable","habit":1.79},{"program":"Nedbank Greenbacks","category":"Banking","persona":"overall","score":47,"band":"Manageable","habit":3.53},{"program":"Vodacom VodaBucks","category":"Telecoms & lifestyle","persona":"entry","score":37,"band":"Manageable","habit":2.62},{"program":"Vodacom VodaBucks","category":"Telecoms & lifestyle","persona":"mass","score":37,"band":"Manageable","habit":2.54},{"program":"Vodacom VodaBucks","category":"Telecoms & lifestyle","persona":"middle","score":37,"band":"Manageable","habit":2.46},{"program":"Vodacom VodaBucks","category":"Telecoms & lifestyle","persona":"affluent","score":37,"band":"Manageable","habit":2.42},{"program":"Vodacom VodaBucks","category":"Telecoms & lifestyle","persona":"overall","score":37,"band":"Manageable","habit":2.51},{"program":"Edgars Club","category":"Fashion & retail","persona":"entry","score":36,"band":"Manageable","habit":1.31},{"program":"Edgars Club","category":"Fashion & retail","persona":"mass","score":36,"band":"Manageable","habit":1.23},{"program":"Edgars Club","category":"Fashion & retail","persona":"middle","score":36,"band":"Manageable","habit":1.15},{"program":"Edgars Club","category":"Fashion & retail","persona":"affluent","score":35,"band":"Manageable","habit":1.12},{"program":"Edgars Club","category":"Fashion & retail","persona":"overall","score":36,"band":"Manageable","habit":1.2},{"program":"Avis Preferred","category":"Travel & hospitality","persona":"entry","score":28,"band":"Simple","habit":1.52},{"program":"Avis Preferred","category":"Travel & hospitality","persona":"mass","score":28,"band":"Simple","habit":1.49},{"program":"Avis Preferred","category":"Travel & hospitality","persona":"middle","score":28,"band":"Simple","habit":1.36},{"program":"Avis Preferred","category":"Travel & hospitality","persona":"affluent","score":27,"band":"Simple","habit":1.15},{"program":"Avis Preferred","category":"Travel & hospitality","persona":"overall","score":28,"band":"Simple","habit":1.38},{"program":"Dis-Chem Better Rewards","category":"Health & pharmacy","persona":"entry","score":30,"band":"Simple","habit":1.93},{"program":"Dis-Chem Better Rewards","category":"Health & pharmacy","persona":"mass","score":29,"band":"Simple","habit":1.77},{"program":"Dis-Chem Better Rewards","category":"Health & pharmacy","persona":"middle","score":28,"band":"Simple","habit":1.58},{"program":"Dis-Chem Better Rewards","category":"Health & pharmacy","persona":"affluent","score":28,"band":"Simple","habit":1.46},{"program":"Dis-Chem Better Rewards","category":"Health & pharmacy","persona":"overall","score":29,"band":"Simple","habit":1.69},{"program":"Pick n Pay Smart Shopper","category":"Grocery","persona":"entry","score":30,"band":"Simple","habit":2.08},{"program":"Pick n Pay Smart Shopper","category":"Grocery","persona":"mass","score":29,"band":"Simple","habit":1.75},{"program":"Pick n Pay Smart Shopper","category":"Grocery","persona":"middle","score":28,"band":"Simple","habit":1.43},{"program":"Pick n Pay Smart Shopper","category":"Grocery","persona":"affluent","score":27,"band":"Simple","habit":1.26},{"program":"Pick n Pay Smart Shopper","category":"Grocery","persona":"overall","score":29,"band":"Simple","habit":1.63},{"program":"TakealotMORE","category":"Fashion & retail","persona":"entry","score":27,"band":"Simple","habit":1.31},{"program":"TakealotMORE","category":"Fashion & retail","persona":"mass","score":27,"band":"Simple","habit":1.23},{"program":"TakealotMORE","category":"Fashion & retail","persona":"middle","score":27,"band":"Simple","habit":1.15},{"program":"TakealotMORE","category":"Fashion & retail","persona":"affluent","score":27,"band":"Simple","habit":1.12},{"program":"TakealotMORE","category":"Fashion & retail","persona":"overall","score":27,"band":"Simple","habit":1.2},{"program":"Clicks ClubCard","category":"Health & pharmacy","persona":"entry","score":30,"band":"Simple","habit":2.78},{"program":"Clicks ClubCard","category":"Health & pharmacy","persona":"mass","score":29,"band":"Simple","habit":2.32},{"program":"Clicks ClubCard","category":"Health & pharmacy","persona":"middle","score":26,"band":"Simple","habit":1.7},{"program":"Clicks ClubCard","category":"Health & pharmacy","persona":"affluent","score":25,"band":"Simple","habit":1.31},{"program":"Clicks ClubCard","category":"Health & pharmacy","persona":"overall","score":28,"band":"Simple","habit":2.03},{"program":"Shell V+","category":"Fuel","persona":"entry","score":28,"band":"Simple","habit":1.77},{"program":"Shell V+","category":"Fuel","persona":"mass","score":27,"band":"Simple","habit":1.58},{"program":"Shell V+","category":"Fuel","persona":"middle","score":26,"band":"Simple","habit":1.19},{"program":"Shell V+","category":"Fuel","persona":"affluent","score":25,"band":"Simple","habit":1.05},{"program":"Shell V+","category":"Fuel","persona":"overall","score":26,"band":"Simple","habit":1.4},{"program":"Astron Energy Rewards","category":"Fuel","persona":"entry","score":27,"band":"Simple","habit":1.77},{"program":"Astron Energy Rewards","category":"Fuel","persona":"mass","score":26,"band":"Simple","habit":1.58},{"program":"Astron Energy Rewards","category":"Fuel","persona":"middle","score":24,"band":"Simple","habit":1.19},{"program":"Astron Energy Rewards","category":"Fuel","persona":"affluent","score":24,"band":"Simple","habit":1.05},{"program":"Astron Energy Rewards","category":"Fuel","persona":"overall","score":25,"band":"Simple","habit":1.4},{"program":"City Lodge Rewards","category":"Travel & hospitality","persona":"entry","score":23,"band":"Simple","habit":1.52},{"program":"City Lodge Rewards","category":"Travel & hospitality","persona":"mass","score":23,"band":"Simple","habit":1.49},{"program":"City Lodge Rewards","category":"Travel & hospitality","persona":"middle","score":23,"band":"Simple","habit":1.36},{"program":"City Lodge Rewards","category":"Travel & hospitality","persona":"affluent","score":22,"band":"Simple","habit":1.15},{"program":"City Lodge Rewards","category":"Travel & hospitality","persona":"overall","score":23,"band":"Simple","habit":1.38},{"program":"Makro mRewards","category":"Grocery","persona":"entry","score":21,"band":"Simple","habit":2.01},{"program":"Makro mRewards","category":"Grocery","persona":"mass","score":20,"band":"Simple","habit":1.7},{"program":"Makro mRewards","category":"Grocery","persona":"middle","score":19,"band":"Simple","habit":1.39},{"program":"Makro mRewards","category":"Grocery","persona":"affluent","score":18,"band":"Simple","habit":1.23},{"program":"Makro mRewards","category":"Grocery","persona":"overall","score":20,"band":"Simple","habit":1.58},{"program":"Capitec Live Better","category":"Banking","persona":"entry","score":21,"band":"Simple","habit":2.63},{"program":"Capitec Live Better","category":"Banking","persona":"mass","score":18,"band":"Simple","habit":1.93},{"program":"Capitec Live Better","category":"Banking","persona":"middle","score":16,"band":"Simple","habit":1.35},{"program":"Capitec Live Better","category":"Banking","persona":"affluent","score":15,"band":"Simple","habit":1.12},{"program":"Capitec Live Better","category":"Banking","persona":"overall","score":18,"band":"Simple","habit":1.76},{"program":"OUTsurance OUTbonus","category":"Wellness & insurance","persona":"entry","score":17,"band":"Simple","habit":1.41},{"program":"OUTsurance OUTbonus","category":"Wellness & insurance","persona":"mass","score":16,"band":"Simple","habit":1.31},{"program":"OUTsurance OUTbonus","category":"Wellness & insurance","persona":"middle","score":16,"band":"Simple","habit":1.15},{"program":"OUTsurance OUTbonus","category":"Wellness & insurance","persona":"affluent","score":15,"band":"Simple","habit":1.05},{"program":"OUTsurance OUTbonus","category":"Wellness & insurance","persona":"overall","score":16,"band":"Simple","habit":1.23},{"program":"Ster-Kinekor SK Club","category":"Telecoms & lifestyle","persona":"entry","score":16,"band":"Simple","habit":1.31},{"program":"Ster-Kinekor SK Club","category":"Telecoms & lifestyle","persona":"mass","score":16,"band":"Simple","habit":1.23},{"program":"Ster-Kinekor SK Club","category":"Telecoms & lifestyle","persona":"middle","score":16,"band":"Simple","habit":1.15},{"program":"Ster-Kinekor SK Club","category":"Telecoms & lifestyle","persona":"affluent","score":15,"band":"Simple","habit":1.12},{"program":"Ster-Kinekor SK Club","category":"Telecoms & lifestyle","persona":"overall","score":16,"band":"Simple","habit":1.2},{"program":"Spar Rewards","category":"Grocery","persona":"entry","score":15,"band":"Simple","habit":1.31},{"program":"Spar Rewards","category":"Grocery","persona":"mass","score":15,"band":"Simple","habit":1.23},{"program":"Spar Rewards","category":"Grocery","persona":"middle","score":14,"band":"Simple","habit":1.15},{"program":"Spar Rewards","category":"Grocery","persona":"affluent","score":14,"band":"Simple","habit":1.12},{"program":"Spar Rewards","category":"Grocery","persona":"overall","score":14,"band":"Simple","habit":1.2},{"program":"Checkers Xtra Savings","category":"Grocery","persona":"entry","score":15,"band":"Simple","habit":2.08},{"program":"Checkers Xtra Savings","category":"Grocery","persona":"mass","score":14,"band":"Simple","habit":1.75},{"program":"Checkers Xtra Savings","category":"Grocery","persona":"middle","score":13,"band":"Simple","habit":1.43},{"program":"Checkers Xtra Savings","category":"Grocery","persona":"affluent","score":12,"band":"Simple","habit":1.26},{"program":"Checkers Xtra Savings","category":"Grocery","persona":"overall","score":14,"band":"Simple","habit":1.63},{"program":"Sasol Rewards","category":"Fuel","persona":"entry","score":14,"band":"Simple","habit":1.77},{"program":"Sasol Rewards","category":"Fuel","persona":"mass","score":13,"band":"Simple","habit":1.58},{"program":"Sasol Rewards","category":"Fuel","persona":"middle","score":12,"band":"Simple","habit":1.19},{"program":"Sasol Rewards","category":"Fuel","persona":"affluent","score":11,"band":"Simple","habit":1.05},{"program":"Sasol Rewards","category":"Fuel","persona":"overall","score":13,"band":"Simple","habit":1.4},{"program":"Spur Rewards","category":"Telecoms & lifestyle","persona":"entry","score":13,"band":"Simple","habit":2.01},{"program":"Spur Rewards","category":"Telecoms & lifestyle","persona":"mass","score":11,"band":"Simple","habit":1.7},{"program":"Spur Rewards","category":"Telecoms & lifestyle","persona":"middle","score":10,"band":"Simple","habit":1.39},{"program":"Spur Rewards","category":"Telecoms & lifestyle","persona":"affluent","score":10,"band":"Simple","habit":1.23},{"program":"Spur Rewards","category":"Telecoms & lifestyle","persona":"overall","score":11,"band":"Simple","habit":1.58}],"programs":[{"program":"FNB eBucks","category":"Banking","earning":5,"tier":5,"redemption":3,"expiry":2,"visibility":3,"prereq":5,"volatility":5,"rewardGap":null,"rewardGapLabel":"Needs data","confidence":"High","watchout":"Insurance products earn reward-level points (up to 3,500 a month), nudging product uptake","behaviours":"card:admin:monthly; task:admin:monthly; credit:product:monthly; insure:product:monthly; invest:product:monthly; highspend:admin:monthly; debit:admin:monthly"},{"program":"Discovery Vitality","category":"Wellness & insurance","earning":5,"tier":4,"redemption":3,"expiry":3,"visibility":3,"prereq":5,"volatility":4,"rewardGap":null,"rewardGapLabel":"Very high (dormant earns 0%)","confidence":"High","watchout":"","behaviours":"exercise:lifestyle:weekly; health:lifestyle:annual; shop:lifestyle:monthly; app:admin:weekly"},{"program":"Momentum Multiply","category":"Wellness & insurance","earning":5,"tier":5,"redemption":3,"expiry":2,"visibility":3,"prereq":5,"volatility":4,"rewardGap":5,"rewardGapLabel":"5x (gym 10% vs 50%)","confidence":"Medium","watchout":"Free Inspire and Engage tiers earn no partner rewards without a Healthy Heart Score","behaviours":"health:lifestyle:annual; exercise:lifestyle:weekly; app:admin:monthly"},{"program":"Standard Bank UCount","category":"Banking","earning":5,"tier":4,"redemption":3,"expiry":2,"visibility":3,"prereq":5,"volatility":5,"rewardGap":17,"rewardGapLabel":"~17x (fuel R0.60 vs R10/L)","confidence":"High","watchout":"Spending points at retailers needs a separate UCount Rewards Card, ordered and activated","behaviours":"card:admin:monthly; credit:product:monthly; insure:product:monthly; invest:product:monthly; app:admin:monthly"},{"program":"Discovery Bank","category":"Banking","earning":5,"tier":4,"redemption":3,"expiry":3,"visibility":2,"prereq":5,"volatility":4,"rewardGap":null,"rewardGapLabel":"Very high","confidence":"Medium","watchout":"","behaviours":"card:admin:monthly; credit:product:monthly; invest:product:monthly; insure:product:monthly; app:admin:monthly"},{"program":"Absa Rewards","category":"Banking","earning":5,"tier":5,"redemption":1,"expiry":1,"visibility":3,"prereq":4,"volatility":4,"rewardGap":150,"rewardGapLabel":"150x credit, 30x debit","confidence":"High","watchout":"Once-a-year 30% cashback bonus for signing up to automatic credit limit increases","behaviours":"card:admin:monthly; salary:admin:monthly; task:admin:monthly; task:admin:monthly; credit:product:monthly; invest:product:monthly"},{"program":"SAA Voyager","category":"Travel & hospitality","earning":4,"tier":4,"redemption":4,"expiry":5,"visibility":3,"prereq":2,"volatility":4,"rewardGap":null,"rewardGapLabel":"Needs data","confidence":"High","watchout":"Miles expire on 31 March unless you meet an activity threshold","behaviours":"travel:lifestyle:annual; card:admin:monthly"},{"program":"Marriott Bonvoy (Protea)","category":"Travel & hospitality","earning":4,"tier":5,"redemption":4,"expiry":3,"visibility":2,"prereq":1,"volatility":4,"rewardGap":null,"rewardGapLabel":"Needs data","confidence":"Medium","watchout":"Protea earns half the points per dollar of most Marriott brands","behaviours":"travel:lifestyle:annual; travel:lifestyle:annual"},{"program":"Sanlam Reality","category":"Wellness & insurance","earning":3,"tier":4,"redemption":3,"expiry":3,"visibility":3,"prereq":4,"volatility":3,"rewardGap":null,"rewardGapLabel":"Needs data","confidence":"Low","watchout":"","behaviours":"health:lifestyle:annual; exercise:lifestyle:weekly; insure:product:monthly"},{"program":"Investec Rewards","category":"Banking","earning":3,"tier":4,"redemption":2,"expiry":2,"visibility":2,"prereq":5,"volatility":2,"rewardGap":5,"rewardGapLabel":"5x (R20 vs R4 per point)","confidence":"Medium","watchout":"Only Investec Private Bank and Private Business account holders can join","behaviours":"card:admin:monthly; credit:product:monthly; invest:product:monthly; insure:product:monthly"},{"program":"Woolworths MyDifference","category":"Grocery","earning":3,"tier":3,"redemption":3,"expiry":3,"visibility":3,"prereq":2,"volatility":5,"rewardGap":6,"rewardGapLabel":"6x (4 vs 24 vouchers)","confidence":"High","watchout":"","behaviours":"shop:passive:monthly; app:admin:monthly; highspend:passive:annual"},{"program":"Nedbank Greenbacks","category":"Banking","earning":3,"tier":4,"redemption":2,"expiry":2,"visibility":2,"prereq":3,"volatility":3,"rewardGap":6.7,"rewardGapLabel":"~7x (0.3% vs 2%)","confidence":"High","watchout":"","behaviours":"salary:admin:monthly; card:admin:monthly; credit:product:monthly; invest:product:monthly"},{"program":"Vodacom VodaBucks","category":"Telecoms & lifestyle","earning":3,"tier":1,"redemption":2,"expiry":5,"visibility":3,"prereq":1,"volatility":3,"rewardGap":1,"rewardGapLabel":"1x","confidence":"High","watchout":"VodaBucks must be banked every week (by Friday) or they are lost","behaviours":"task:admin:weekly; shop:passive:monthly"},{"program":"Edgars Club","category":"Fashion & retail","earning":2,"tier":3,"redemption":2,"expiry":2,"visibility":3,"prereq":4,"volatility":3,"rewardGap":3,"rewardGapLabel":"3x (10% vs 30% hotels)","confidence":"Low","watchout":"","behaviours":"shop:passive:monthly"},{"program":"Avis Preferred","category":"Travel & hospitality","earning":3,"tier":3,"redemption":2,"expiry":2,"visibility":2,"prereq":1,"volatility":2,"rewardGap":null,"rewardGapLabel":"Needs data","confidence":"Low","watchout":"","behaviours":"travel:passive:annual"},{"program":"Dis-Chem Better Rewards","category":"Health & pharmacy","earning":3,"tier":2,"redemption":1,"expiry":2,"visibility":2,"prereq":2,"volatility":4,"rewardGap":10,"rewardGapLabel":"10x (10% vs up to 100%)","confidence":"High","watchout":"","behaviours":"shop:passive:monthly; health:passive:monthly"},{"program":"Pick n Pay Smart Shopper","category":"Grocery","earning":3,"tier":1,"redemption":2,"expiry":4,"visibility":3,"prereq":1,"volatility":2,"rewardGap":1,"rewardGapLabel":"1x","confidence":"High","watchout":"Points expire 12 months after earning","behaviours":"shop:passive:weekly; app:admin:monthly"},{"program":"TakealotMORE","category":"Fashion & retail","earning":2,"tier":2,"redemption":2,"expiry":1,"visibility":2,"prereq":4,"volatility":3,"rewardGap":null,"rewardGapLabel":"Paid tiers","confidence":"Medium","watchout":"Paid subscription (R39 or R99 a month), not earn-and-burn","behaviours":"shop:passive:monthly"},{"program":"Clicks ClubCard","category":"Health & pharmacy","earning":3,"tier":2,"redemption":1,"expiry":2,"visibility":2,"prereq":1,"volatility":4,"rewardGap":2,"rewardGapLabel":"2x (2% vs 4%)","confidence":"High","watchout":"Personalised deals need marketing consent","behaviours":"shop:passive:monthly; highspend:passive:monthly; app:admin:monthly"},{"program":"Shell V+","category":"Fuel","earning":2,"tier":3,"redemption":2,"expiry":2,"visibility":2,"prereq":1,"volatility":3,"rewardGap":2,"rewardGapLabel":"2x (upper tiers)","confidence":"Medium","watchout":"Sale of Shell SA to ADNOC agreed, pending approvals; plans for V+ not announced","behaviours":"drive:passive:weekly"},{"program":"Astron Energy Rewards","category":"Fuel","earning":3,"tier":1,"redemption":2,"expiry":3,"visibility":3,"prereq":1,"volatility":2,"rewardGap":1,"rewardGapLabel":"1x","confidence":"Medium","watchout":"Chance-based vouchers, so value is unpredictable","behaviours":"drive:passive:weekly"},{"program":"City Lodge Rewards","category":"Travel & hospitality","earning":2,"tier":2,"redemption":2,"expiry":2,"visibility":3,"prereq":1,"volatility":2,"rewardGap":null,"rewardGapLabel":"Needs data","confidence":"Low","watchout":"Booking with a Clicks ClubCard earns no hotel points","behaviours":"travel:passive:annual"},{"program":"Makro mRewards","category":"Grocery","earning":2,"tier":1,"redemption":2,"expiry":2,"visibility":2,"prereq":2,"volatility":2,"rewardGap":1,"rewardGapLabel":"1x","confidence":"Low","watchout":"","behaviours":"shop:passive:monthly; app:admin:monthly"},{"program":"Capitec Live Better","category":"Banking","earning":3,"tier":1,"redemption":1,"expiry":1,"visibility":2,"prereq":2,"volatility":2,"rewardGap":1,"rewardGapLabel":"1x","confidence":"High","watchout":"","behaviours":"card:admin:monthly; debit:admin:monthly"},{"program":"OUTsurance OUTbonus","category":"Wellness & insurance","earning":1,"tier":1,"redemption":1,"expiry":4,"visibility":2,"prereq":3,"volatility":1,"rewardGap":1,"rewardGapLabel":"1x","confidence":"High","watchout":"A paid claim forfeits the bonus; cancelling the policy does too","behaviours":"insure:passive:annual"},{"program":"Ster-Kinekor SK Club","category":"Telecoms & lifestyle","earning":2,"tier":1,"redemption":2,"expiry":2,"visibility":2,"prereq":1,"volatility":2,"rewardGap":1,"rewardGapLabel":"1x","confidence":"Low","watchout":"","behaviours":"shop:passive:monthly"},{"program":"Spar Rewards","category":"Grocery","earning":2,"tier":1,"redemption":1,"expiry":2,"visibility":3,"prereq":1,"volatility":2,"rewardGap":1,"rewardGapLabel":"1x","confidence":"Low","watchout":"","behaviours":"shop:passive:monthly"},{"program":"Checkers Xtra Savings","category":"Grocery","earning":2,"tier":1,"redemption":1,"expiry":1,"visibility":3,"prereq":1,"volatility":2,"rewardGap":1,"rewardGapLabel":"1x","confidence":"High","watchout":"Savings shown on slips are not cash","behaviours":"shop:passive:weekly; app:admin:monthly"},{"program":"Sasol Rewards","category":"Fuel","earning":1,"tier":1,"redemption":2,"expiry":2,"visibility":2,"prereq":1,"volatility":2,"rewardGap":1,"rewardGapLabel":"1x","confidence":"High","watchout":"","behaviours":"drive:passive:weekly"},{"program":"Spur Rewards","category":"Telecoms & lifestyle","earning":1,"tier":1,"redemption":2,"expiry":1,"visibility":2,"prereq":1,"volatility":2,"rewardGap":1,"rewardGapLabel":"1x","confidence":"High","watchout":"","behaviours":"shop:passive:monthly; app:admin:monthly"}],"links":[{"program":"FNB eBucks","partner":"Engen"},{"program":"FNB eBucks","partner":"Clicks"},{"program":"FNB eBucks","partner":"Pick n Pay"},{"program":"Standard Bank UCount","partner":"Astron Energy"},{"program":"Standard Bank UCount","partner":"Checkers"},{"program":"Standard Bank UCount","partner":"Makro"},{"program":"Standard Bank UCount","partner":"Clicks"},{"program":"Discovery Vitality","partner":"Checkers"},{"program":"Discovery Vitality","partner":"Woolworths"},{"program":"Discovery Vitality","partner":"Clicks"},{"program":"Discovery Vitality","partner":"Ster-Kinekor"},{"program":"Momentum Multiply","partner":"Clicks"},{"program":"Momentum Multiply","partner":"City Lodge"},{"program":"Discovery Bank","partner":"Discovery Vitality"},{"program":"Discovery Bank","partner":"Shell"},{"program":"Absa Rewards","partner":"Checkers"},{"program":"Absa Rewards","partner":"Shell"},{"program":"Absa Rewards","partner":"Food Lover's"},{"program":"Absa Rewards","partner":"Clicks"},{"program":"Absa Rewards","partner":"Pick n Pay"},{"program":"Woolworths MyDifference","partner":"Discovery Vitality"},{"program":"Edgars Club","partner":"City Lodge"},{"program":"Dis-Chem Better Rewards","partner":"Capitec"},{"program":"Pick n Pay Smart Shopper","partner":"FNB eBucks"},{"program":"Pick n Pay Smart Shopper","partner":"Absa Rewards"},{"program":"Clicks ClubCard","partner":"Engen"},{"program":"Clicks ClubCard","partner":"Absa Rewards"},{"program":"Clicks ClubCard","partner":"Standard Bank UCount"},{"program":"Clicks ClubCard","partner":"FNB eBucks"},{"program":"Shell V+","partner":"Absa Rewards"},{"program":"Shell V+","partner":"Capitec Live Better"},{"program":"Shell V+","partner":"Discovery Bank"},{"program":"Astron Energy Rewards","partner":"Standard Bank UCount"},{"program":"City Lodge Rewards","partner":"Clicks"},{"program":"City Lodge Rewards","partner":"Momentum Multiply"},{"program":"Makro mRewards","partner":"Standard Bank UCount"},{"program":"Capitec Live Better","partner":"Dis-Chem"},{"program":"Capitec Live Better","partner":"Shell"},{"program":"Ster-Kinekor SK Club","partner":"Discovery Vitality"},{"program":"Spar Rewards","partner":"FNB eBucks"},{"program":"Checkers Xtra Savings","partner":"Standard Bank UCount"},{"program":"Checkers Xtra Savings","partner":"Absa Rewards"},{"program":"Checkers Xtra Savings","partner":"Discovery Vitality"},{"program":"Sasol Rewards","partner":"Absa Rewards"}],"personas":[{"persona":"entry","label":"Entry","description":"Household under R5k/month. Cash-heavy, basic account, budget grocer, rarely drives.","card":0.3,"salary":0.5,"debit":0.3,"app":0.4,"credit":0.1,"insure":0.2,"invest":0.0,"highspend":0.0,"exercise":0.2,"health":0.2,"travel":0.0,"shop":0.6,"drive":0.2,"task":0.1},{"persona":"mass","label":"Mass market","description":"Household R5k to R10k. Debit card, a few debit orders, mid-tier grocer.","card":0.6,"salary":0.7,"debit":0.6,"app":0.6,"credit":0.3,"insure":0.4,"invest":0.05,"highspend":0.2,"exercise":0.3,"health":0.3,"travel":0.05,"shop":0.7,"drive":0.4,"task":0.1},{"persona":"middle","label":"Middle income","description":"Household R10k to R40k. Credit card, car, some insurance, regular app use.","card":0.85,"salary":0.8,"debit":0.85,"app":0.8,"credit":0.7,"insure":0.7,"invest":0.3,"highspend":0.6,"exercise":0.45,"health":0.45,"travel":0.3,"shop":0.8,"drive":0.8,"task":0.1},{"persona":"affluent","label":"Affluent","description":"Household R40k+. Multiple cards, investments, frequent travel, high digital use.","card":0.95,"salary":0.9,"debit":0.95,"app":0.9,"credit":0.9,"insure":0.9,"invest":0.7,"highspend":0.9,"exercise":0.55,"health":0.55,"travel":0.7,"shop":0.85,"drive":0.95,"task":0.1}],"method":[{"dimension":"Earning complexity","key":"earning","weight":15,"measures":"How many rules decide what you earn: rates by category, partner, tier and channel, plus caps"},{"dimension":"Tier clarity","key":"tier","weight":15,"measures":"How hard it is to understand, reach and keep a tier: criteria, review frequency, drop risk"},{"dimension":"Habit burden","key":"habit","weight":15,"measures":"Gap between required behaviours and what the persona already does, weighted by effort and frequency"},{"dimension":"Redemption friction","key":"redemption","weight":15,"measures":"Minimums, restricted partners, extra cards or steps needed to use value"},{"dimension":"Expiry and breakage","key":"expiry","weight":10,"measures":"How easily earned value is lost: expiry windows, inactivity rules, forfeits"},{"dimension":"Visibility","key":"visibility","weight":10,"measures":"How easy it is to see balance, progress and expiring value"},{"dimension":"Prerequisites and fees","key":"prereq","weight":10,"measures":"Fees and products you must hold to unlock full value"},{"dimension":"Rule volatility","key":"volatility","weight":10,"measures":"How often earn rates, tiers or partners changed in 2024 to 2026"}],"changelog":[{"month":"2025-03","program":"FNB eBucks","change":"Checkers and Shoprite partnership ended; Pick n Pay added","effect":"Mixed"},{"month":"2025-07","program":"FNB eBucks","change":"Levelling revamp: Premier loses 500 points for digital transactions","effect":"Harder"},{"month":"2025-10","program":"FNB eBucks","change":"eBucks PayDay: rewards paid on the 15th of every month","effect":"Easier"},{"month":"2025-11","program":"FNB eBucks","change":"2,500 fewer points on simple behaviours; Aspire needs R5,000 spend plus two behaviours","effect":"Harder"},{"month":"2025-03","program":"Discovery Vitality","change":"HealthyFood tightened; members missing requirements become dormant","effect":"Harder"},{"month":"2026-01","program":"Discovery Vitality","change":"HealthyCare and HealthyBaby rewards paid in Miles without a Discovery Bank account","effect":"Harder"},{"month":"2026-09","program":"Discovery Vitality","change":"HealthyFood rewards need R200 monthly qualifying spend","effect":"Harder"},{"month":"2025-06","program":"Woolworths MyDifference","change":"MyDifference launched with annual spend tiers","effect":"Mixed"},{"month":"2026-06","program":"Woolworths MyDifference","change":"WRewards and MySchool cards stop working","effect":"Harder"},{"month":"2026-07","program":"Woolworths MyDifference","change":"MyDifference Plus adds cashback for Woolies card holders","effect":"Mixed"},{"month":"2025-10","program":"Dis-Chem Better Rewards","change":"Points replaced by 10% instant discounts; old points valid six months","effect":"Mixed"},{"month":"2026-02","program":"Clicks ClubCard","change":"4% cashback on spend over R600 in the monthly cycle","effect":"Easier"},{"month":"2026-08","program":"Clicks ClubCard","change":"Monthly cashback cycle and 10% instant savings on 2,500 products","effect":"Easier"},{"month":"2026-09","program":"Clicks ClubCard","change":"Absa Rewards and Standard Bank UCount added as partners","effect":"Mixed"},{"month":"2026-02","program":"Standard Bank UCount","change":"Dis-Chem earning and the Travel Mall end","effect":"Harder"},{"month":"2026-03","program":"Standard Bank UCount","change":"Streaming redemptions end","effect":"Harder"},{"month":"2026-06","program":"Standard Bank UCount","change":"New programme rules from 16 June","effect":"Mixed"},{"month":"2025-08","program":"Absa Rewards","change":"Shoprite group added as a grocery partner","effect":"Easier"},{"month":"2026-04","program":"Absa Rewards","change":"Fuel cashback cap raised by R2,000 for two months","effect":"Easier"},{"month":"2026-05","program":"Absa Rewards","change":"Shell added as a fuel partner","effect":"Easier"},{"month":"2026-01","program":"Momentum Multiply","change":"Healthy Heart Score needed to earn partner rewards; partners removed","effect":"Harder"},{"month":"2026-03","program":"GoTyme (TymeBank)","change":"Double Smart Shopper points benefit ends","effect":"Harder"},{"month":"2026-09","program":"TakealotMORE","change":"Free delivery threshold for non-members rises to R750","effect":"Harder"},{"month":"2026-07","program":"Shell V+","change":"ADNOC agrees to buy Shell's SA fuel stations","effect":"Mixed"}],"reasons":[{"program":"FNB eBucks","dimension":"earning","note":"Earn rate depends on your reward level, with different rates by partner, card type and category, and caps on partner spend."},{"program":"FNB eBucks","dimension":"tier","note":"Five levels set by points across eight product categories, assessed monthly. Analysts warned some customers could drop two levels after the November 2025 changes."},{"program":"FNB eBucks","dimension":"habit","note":"Staying maximised means monthly card spend targets, 80% virtual card use, checking Track my rewards, and holding credit, insurance and savings products."},{"program":"FNB eBucks","dimension":"redemption","note":"Spend at partners, eBucks Shop or eBucks Travel. Travel discounts rise from 20% to 80% only with extra insurance products."},{"program":"FNB eBucks","dimension":"expiry","note":"Rewards are paid monthly on the 15th. Expiry rules not confirmed."},{"program":"FNB eBucks","dimension":"visibility","note":"Track my rewards shows progress, but the bank pays points just for opening it."},{"program":"FNB eBucks","dimension":"prereq","note":"FNB account fees, and top levels need credit, insurance and investment products."},{"program":"FNB eBucks","dimension":"volatility","note":"Rules changed in March, July and November 2025, including point cuts on simple behaviours."},{"program":"Standard Bank UCount","dimension":"earning","note":"Five tiers with different earn rates per card type, plus a constant stream of time-limited boosts."},{"program":"Standard Bank UCount","dimension":"tier","note":"Tier points come from monthly banking activity and how many Standard Bank products you hold."},{"program":"Standard Bank UCount","dimension":"habit","note":"Higher tiers need credit, insurance and investment products, plus regular card spend."},{"program":"Standard Bank UCount","dimension":"redemption","note":"Spending points in-store or online at retailers needs a separate UCount Rewards Card, ordered and activated. Points can also go to loans, investments, airtime or vouchers through the app or redemption portal without the card."},{"program":"Standard Bank UCount","dimension":"prereq","note":"R25 a month rewards fee plus multiple products for top tiers."},{"program":"Standard Bank UCount","dimension":"volatility","note":"In 2026 alone: Dis-Chem earning ended, the Travel Mall closed, streaming redemptions ended and new rules arrived in May and June."},{"program":"Discovery Bank","dimension":"earning","note":"Rewards depend on Vitality Money status, Vitality Health status and 12-month average card spend together."},{"program":"Discovery Bank","dimension":"tier","note":"Blue to Diamond status from five financial behaviours, which also moves your interest rates."},{"program":"Discovery Bank","dimension":"habit","note":"Saving, insurance, credit management and app goals all feed status."},{"program":"Discovery Bank","dimension":"prereq","note":"Monthly account fees plus a Vitality Money premium; full boosts need Vitality Health too."},{"program":"Discovery Bank","dimension":"volatility","note":"Rewards standardised to Miles in 2026, removing other cashback routes for some members."},{"program":"Absa Rewards","dimension":"earning","note":"Rates differ by tier, card type and partner, from 0.15% to 30% at the same store, with R3,000 grocery caps."},{"program":"Absa Rewards","dimension":"tier","note":"Score-based tiers recalculated monthly. Some scores need criteria met two months running, and digital scores need primacy first."},{"program":"Absa Rewards","dimension":"habit","note":"Income paid in, card spend, digital activity and products all feed the monthly tier score. Some scores need criteria met two months running."},{"program":"Absa Rewards","dimension":"redemption","note":"Real cash, paid automatically. This keeps the end of the journey simple."},{"program":"Absa Rewards","dimension":"expiry","note":"Cash back does not expire."},{"program":"Absa Rewards","dimension":"volatility","note":"Tier criteria changed in 2024; Shoprite, Shell and Clicks were added and fuel caps changed in 2025 and 2026."},{"program":"Nedbank Greenbacks","dimension":"tier","note":"Five goal-based levels: income paid in first, then card use, savings and borrowing goals, plus a booster level."},{"program":"Nedbank Greenbacks","dimension":"habit","note":"Higher levels need income switched to Nedbank and goals such as a R100,000 investment balance."},{"program":"Nedbank Greenbacks","dimension":"redemption","note":"Withdraw as cash at a Nedbank ATM with the SHOP Card."},{"program":"Nedbank Greenbacks","dimension":"prereq","note":"Free for most accounts; two account types pay a fee."},{"program":"Investec Rewards","dimension":"tier","note":"Five earn levels driven by a monthly partnership score across banking, lending, investing and insurance."},{"program":"Investec Rewards","dimension":"prereq","note":"Only Investec Private Bank and Private Business account holders can join."},{"program":"Investec Rewards","dimension":"volatility","note":"Programme rebuilt in 2022; stable since."},{"program":"Capitec Live Better","dimension":"earning","note":"Partner cashback at fixed rates, some capped, plus 1% on credit card spend."},{"program":"Capitec Live Better","dimension":"tier","note":"Capitec states there are no levels or tiers."},{"program":"Capitec Live Better","dimension":"redemption","note":"Cash paid into Live Better savings on the 10th of each month, usable for anything."},{"program":"Capitec Live Better","dimension":"expiry","note":"Cash does not expire."},{"program":"Discovery Vitality","dimension":"earning","note":"Rewards vary by status, partner, product category and whether you also bank with Discovery."},{"program":"Discovery Vitality","dimension":"tier","note":"Blue to Diamond status from points earned through the calendar year, then reset."},{"program":"Discovery Vitality","dimension":"habit","note":"Regular exercise, annual health checks, healthy food purchases and weekly app goals. These are genuine lifestyle changes."},{"program":"Discovery Vitality","dimension":"redemption","note":"Rewards paid in Discovery Miles, with some partner discounts limited to banking clients."},{"program":"Discovery Vitality","dimension":"prereq","note":"Monthly membership fee, with the biggest rewards needing Discovery Bank as well."},{"program":"Discovery Vitality","dimension":"volatility","note":"HealthyFood tightened in 2025; rewards moved to Miles in 2026; a R200 monthly minimum from September 2026."},{"program":"Momentum Multiply","dimension":"earning","note":"Discounts and cashback vary by partner and by rewards level, from 0% to 10% at Clicks."},{"program":"Momentum Multiply","dimension":"tier","note":"Two product layers (free and paid Plus) plus five rewards levels driven by health and fitness assessments."},{"program":"Momentum Multiply","dimension":"habit","note":"Free tiers earn nothing at partners without a Healthy Heart Score."},{"program":"Momentum Multiply","dimension":"prereq","note":"Needs a qualifying medical scheme; better rewards need the paid Plus tier."},{"program":"Momentum Multiply","dimension":"volatility","note":"Several partners removed for 2026 and earning rules changed."},{"program":"Sanlam Reality","dimension":"tier","note":"Blue to Gold tiers from tier points, with Diamond for staying Gold three years in a row."},{"program":"Sanlam Reality","dimension":"habit","note":"Tier points from health checks, gym visits and using Sanlam products."},{"program":"Sanlam Reality","dimension":"prereq","note":"R129 or R289 a month membership."},{"program":"OUTsurance OUTbonus","dimension":"earning","note":"One simple rule: 10% of premiums back after three claim-free years."},{"program":"OUTsurance OUTbonus","dimension":"expiry","note":"Any paid claim in the cycle forfeits the bonus, and cancelling the policy forfeits it too."},{"program":"OUTsurance OUTbonus","dimension":"prereq","note":"Only for OUTsurance car and home policyholders."},{"program":"SAA Voyager","dimension":"earning","note":"Miles per rand on SAA flights, distance-based on partners, and separate card earn rates."},{"program":"SAA Voyager","dimension":"tier","note":"Tier status from tier miles flown on SAA and Star Alliance."},{"program":"SAA Voyager","dimension":"redemption","note":"Revenue-based redemption, and missing miles must be claimed with documents within time limits."},{"program":"SAA Voyager","dimension":"expiry","note":"Miles expire on 31 March unless you fly 6,000 tier miles on SAA in the year before, or (Lifetime Platinum) spend R300,000 on the Voyager card."},{"program":"SAA Voyager","dimension":"volatility","note":"Redemptions suspended during business rescue; switched to a revenue-based model."},{"program":"Marriott Bonvoy (Protea)","dimension":"earning","note":"Protea earns 5 points per dollar against 10 at most Marriott brands."},{"program":"Marriott Bonvoy (Protea)","dimension":"tier","note":"Protea stays earn 1 elite night per 2 nights, so Gold needs 50 nights or more on Protea alone."},{"program":"Marriott Bonvoy (Protea)","dimension":"redemption","note":"Global programme with variable award pricing."},{"program":"Marriott Bonvoy (Protea)","dimension":"volatility","note":"Protea earning was cut in 2023."},{"program":"Avis Preferred","dimension":"tier","note":"Tiers based on how much you rent and spend."},{"program":"Avis Preferred","dimension":"prereq","note":"Free to join."},{"program":"City Lodge Rewards","dimension":"visibility","note":"Several programmes earn here, and booking with one (such as Clicks ClubCard) means no hotel points, so you must choose."},{"program":"Edgars Club","dimension":"tier","note":"Perks vary by membership tier, such as 10% to 30% off City Lodge."},{"program":"Edgars Club","dimension":"prereq","note":"Paid club membership."},{"program":"TakealotMORE","dimension":"prereq","note":"Paid subscription at R39 or R99 a month."},{"program":"TakealotMORE","dimension":"volatility","note":"Free delivery thresholds changed in 2026 as Amazon arrived."},{"program":"Dis-Chem Better Rewards","dimension":"earning","note":"10% base discount plus stackable 5% boosts for Capitec cards and pharmacy visits; policyholders get 20% to 100% based on health rating."},{"program":"Dis-Chem Better Rewards","dimension":"redemption","note":"Discounts apply instantly at the till."},{"program":"Dis-Chem Better Rewards","dimension":"volatility","note":"Points programme replaced by instant discounts in October 2025."},{"program":"Clicks ClubCard","dimension":"earning","note":"2% base, 4% above R600 monthly spend, plus Baby Club, Seniors Wednesdays and 10% instant savings."},{"program":"Clicks ClubCard","dimension":"redemption","note":"Cashback loads to your card automatically."},{"program":"Clicks ClubCard","dimension":"volatility","note":"Monthly cycle, the R600 rule, instant savings and two new bank partners all arrived in 2026."},{"program":"Woolworths MyDifference","dimension":"tier","note":"Three annual spend levels at R0, R12,000 and R36,000, reviewed each January."},{"program":"Woolworths MyDifference","dimension":"redemption","note":"Rewards arrive as personalised vouchers rather than cash, so their value is harder to judge."},{"program":"Woolworths MyDifference","dimension":"volatility","note":"The whole programme was replaced, old cards stopped in June 2026 and a Plus tier launched in July."},{"program":"Pick n Pay Smart Shopper","dimension":"earning","note":"Flat 0.5% plus club and partner boosts."},{"program":"Pick n Pay Smart Shopper","dimension":"redemption","note":"You must register your card before you can spend points."},{"program":"Pick n Pay Smart Shopper","dimension":"expiry","note":"Points expire 12 months after earning. Over R250 million sat unclaimed in 2023."},{"program":"Makro mRewards","dimension":"redemption","note":"Cash back sits in an mWallet spendable only at Makro."},{"program":"Checkers Xtra Savings","dimension":"tier","note":"No points, no tiers, no levels."},{"program":"Checkers Xtra Savings","dimension":"redemption","note":"Savings apply instantly at the till."},{"program":"Checkers Xtra Savings","dimension":"visibility","note":"Savings shown on slips are not cash, which confuses some shoppers."},{"program":"Spar Rewards","dimension":"visibility","note":"Monthly deals are shown in the SPAR app; you can use your cell number at the till."},{"program":"Vodacom VodaBucks","dimension":"habit","note":"You must bank your VodaBucks every week before they expire."},{"program":"Vodacom VodaBucks","dimension":"expiry","note":"Unbanked VodaBucks expire weekly; banked ones last 12 months."},{"program":"Ster-Kinekor SK Club","dimension":"earning","note":"Points on tickets and snacks, plus half-price Tuesdays."},{"program":"Spur Rewards","dimension":"earning","note":"A R50 voucher after R1,000 spend."},{"program":"Spur Rewards","dimension":"expiry","note":"Vouchers last three years."},{"program":"Shell V+","dimension":"tier","note":"Tiers set automatically by spend and visits."},{"program":"Shell V+","dimension":"volatility","note":"ADNOC agreed in July 2026 to buy Shell's SA retail network, with completion expected by end 2027 pending approvals. Plans for V+ have not been announced."},{"program":"Astron Energy Rewards","dimension":"earning","note":"Chance-based vouchers, so value cannot be predicted."},{"program":"Sasol Rewards","dimension":"earning","note":"Flat 30 points per litre, with no tiers or conditions."},{"program":"Sasol Rewards","dimension":"tier","note":"No tiers."}]}</script>
+<script>
+(function () {
+  const DATA = JSON.parse(document.getElementById('rc-data').textContent);
+  const calcs = {}, cache = {}, subs = [];
+  let params = { persona: 'overall', program: 'FNB eBucks' };
+  const rows = (id) => {
+    if (id in DATA) return DATA[id];
+    if (id in calcs) {
+      if (!(id in cache)) cache[id] = calcs[id].fn(...calcs[id].inputs.map(rows));
+      return cache[id];
+    }
+    return undefined;
+  };
+  let scheduled = false;
+  const run = () => { scheduled = false; for (const fn of subs) { try { fn(); } catch (e) { console.error(e); } } };
+  const schedule = () => { if (!scheduled) { scheduled = true; requestAnimationFrame(run); } };
+  window.dash = {
+    data(id) {
+      const d = rows(id);
+      if (d === undefined) return { status: 'missing', data: [], rows: [], columns: [], meta: [] };
+      const columns = Array.isArray(d) && d.length ? Object.keys(d[0]) : [];
+      return { status: 'ok', data: d, rows: d, columns, meta: [], refreshing: false };
+    },
+    onData(fn) { subs.push(fn); try { fn(); } catch (e) { console.error(e); } },
+    calc(id, def) { calcs[id] = def; },
+    loader() {},
+    params() { return { ...params }; },
+    setParams(p) { params = { ...params, ...p }; schedule(); },
+    resetParams() { params = { persona: 'overall', program: 'FNB eBucks' }; schedule(); },
+    refresh() {},
+    setLink(name) { try { history.replaceState(null, '', '#' + name); } catch (e) {} },
+    colors: ['var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)', 'var(--c5)', 'var(--c6)', 'var(--c7)', 'var(--c8)'],
+  };
+  let lastW = 0;
+  const ro = new ResizeObserver(() => { const w = document.getElementById('dash-root').clientWidth; if (Math.abs(w - lastW) > 2) { lastW = w; schedule(); } });
+  window.addEventListener('DOMContentLoaded', () => ro.observe(document.getElementById('dash-root')));
+  window.rcDownload = () => {
+    const blob = new Blob([JSON.stringify(DATA, null, 1)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'sa-rewards-complication-index-data.json'; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+})();
+</script>
+</head>
+<body>
+<div id="dash-root">
+<style>
+#dash-root { --dash-gutter: clamp(16px, 3vw, 40px); }
+.rc { font-family: var(--font-anthropic-sans); color: var(--color-fg); max-width: 1180px; margin-inline: auto; }
+.rc h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
+.rc .lede { color: var(--color-fg-muted); font-size: var(--cds-font-size-body); margin: 0 0 var(--cds-gap-md); max-width: 62ch; line-height: 1.5; }
+.rc .lede b { color: var(--color-fg); font-weight: 600; }
+.rc .bar { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: center; justify-content: space-between; margin-bottom: var(--cds-gap-md); }
+.rc .seg { display: inline-flex; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; flex-wrap: wrap; }
+.rc .seg button { font: inherit; font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); background: transparent; color: var(--color-fg-muted); border: 0; border-right: 1px solid var(--color-border-line); cursor: pointer; }
+.rc .seg button:last-child { border-right: 0; }
+.rc .seg button[aria-pressed="true"] { background: var(--color-panel); color: var(--color-fg); font-weight: 600; }
+.rc .seglabel { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-right: var(--cds-gap-xs); }
+.rc .tabs { display: flex; gap: var(--cds-gap-xs); border-bottom: 1px solid var(--color-border-line); margin-bottom: var(--cds-gap-lg); overflow-x: auto; }
+.rc .tabs button { font: inherit; font-size: var(--cds-font-size-body); padding: var(--cds-pad-sm) var(--cds-pad-sm); background: none; border: 0; border-bottom: 2px solid transparent; color: var(--color-fg-muted); cursor: pointer; white-space: nowrap; }
+.rc .tabs button[aria-selected="true"] { color: var(--color-fg); border-bottom-color: var(--color-fg); }
+.rc .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: var(--cds-gap-md); margin-bottom: var(--cds-gap-lg); }
+.rc .kpi { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); }
+.rc .kpi .k { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.rc .kpi .v { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin-top: var(--cds-gap-xs); font-variant-numeric: tabular-nums; }
+.rc .kpi .n { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-top: var(--cds-gap-xs); }
+.rc .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: var(--cds-gap-md); margin-bottom: var(--cds-gap-md); }
+.rc .card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); position: relative; min-width: 0; margin-bottom: var(--cds-gap-md); }
+.rc .grid .card { margin-bottom: 0; }
+.rc .card h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.rc .card .note { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: var(--cds-gap-xs) 0 var(--cds-gap-md); line-height: 1.45; }
+.rc .chart { width: 100%; position: relative; }
+.rc svg text { font-family: var(--font-anthropic-sans); }
+.rc .tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); max-width: 260px; z-index: 5; opacity: 0; transition: opacity 120ms; line-height: 1.4; }
+.rc .tip .t { color: var(--cds-text-secondary); margin-bottom: 2px; }
+.rc .tip b { font-weight: 600; }
+.rc table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.rc th, .rc td { text-align: left; padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); vertical-align: top; }
+.rc th { color: var(--color-fg-muted); font-weight: 500; position: sticky; top: 0; background: var(--color-panel); }
+.rc .tbox { max-height: 30rem; overflow: auto; }
+.rc .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: var(--cds-font-size-caption); border: 1px solid var(--color-border-line); }
+.rc .harder { color: var(--color-bad); } .rc .easier { color: var(--color-ok); } .rc .mixed { color: var(--color-warn); }
+.rc .legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-bottom: var(--cds-gap-sm); }
+.rc .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.rc .hidden { display: none; }
+.rc .prose { font-size: var(--cds-font-size-body); line-height: 1.55; max-width: 70ch; }
+.rc .prose p { margin: 0 0 var(--cds-gap-sm); }
+.rc .callout { border-left: 3px solid var(--color-fg); padding: var(--cds-pad-sm) var(--cds-pad-md); background: var(--color-panel); border-radius: 0 var(--cds-radius) var(--cds-radius) 0; margin-bottom: var(--cds-gap-md); font-size: var(--cds-font-size-body); line-height: 1.5; }
+.rc [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+.rc [data-dash-source-state=empty] { color: transparent; }
+.rc .fail { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 120px; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.rc .fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+.rc button.sort { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.rc input.search { font: inherit; font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); width: min(100%, 16rem); margin-bottom: var(--cds-gap-sm); }
+.rc select.pick { font: inherit; font-size: var(--cds-font-size-body); padding: var(--cds-pad-xs) var(--cds-pad-sm); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); max-width: 100%; }
+.rc .why-head { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); align-items: baseline; margin-bottom: var(--cds-gap-sm); }
+.rc .why-score { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; }
+.rc .why-sum { font-size: var(--cds-font-size-body); line-height: 1.55; max-width: 72ch; margin: 0 0 var(--cds-gap-sm); }
+.rc .ev { list-style: none; margin: 0; padding: 0; }
+.rc .ev li { display: grid; grid-template-columns: minmax(7rem, 11rem) 3.2rem 1fr; gap: var(--cds-gap-sm); padding: var(--cds-pad-sm) 0; border-bottom: 1px solid var(--color-border-line); font-size: var(--cds-font-size-caption); line-height: 1.45; }
+.rc .ev .d { font-weight: 600; } .rc .ev .r { color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+.rc .ev .muted { color: var(--color-fg-muted); }
+.rc button.go { color: var(--color-fg); text-decoration: underline; text-underline-offset: 2px; margin-left: 4px; font-size: var(--cds-font-size-caption); }
+.rc .hint { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+@media (max-width: 560px) { .rc .ev li { grid-template-columns: 1fr 3rem; } .rc .ev li .x { grid-column: 1 / -1; } }
+</style>
+
+<div class="rc">
+  <h1 id="top">SA Rewards Complication Index</h1>
+  <p class="lede" id="takeaway">
+    <span class="t-who">Across all personas</span>, <b data-source="kpis" data-field="complex" data-where="persona=overall" class="dash-skeleton">—</b> of <span data-source="kpis" data-field="n" data-where="persona=overall">—</span> programmes score Complex or Maze.
+    Banking programmes average <b data-source="kpis" data-field="bankAvg" data-where="persona=overall">—</b> against <b data-source="kpis" data-field="otherAvg" data-where="persona=overall">—</b> for everything else, while the simple fuel programmes pay a fraction of the fuel value locked inside bank tiers.
+  </p>
+
+  <div class="bar">
+    <div><span class="seglabel">Score for</span><span class="seg" id="persona-seg" role="group" aria-label="Persona"></span></div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" data-tab="start" id="tab-start">Start here</button>
+    <button role="tab" data-tab="overview" id="tab-overview">Overview</button>
+    <button role="tab" data-tab="why" id="tab-why">Why this score</button>
+    <button role="tab" data-tab="breakdown" id="tab-breakdown">Where the pain sits</button>
+    <button role="tab" data-tab="personas" id="tab-personas">Personas</button>
+    <button role="tab" data-tab="fairness" id="tab-fairness">Fairness</button>
+    <button role="tab" data-tab="network" id="tab-network">Network</button>
+    <button role="tab" data-tab="changes" id="tab-changes">Rule changes</button>
+    <button role="tab" data-tab="method" id="tab-method">Method</button>
+  </div>
+
+
+  <!-- START -->
+  <section data-page="start" id="start">
+    <div class="card" id="start-card">
+      <h2>What this dashboard shows</h2>
+      <div class="prose" style="margin-top:var(--cds-gap-sm)">
+        <p>South Africans belong to around ten rewards programmes each, and most comparisons only tell you which one pays the most. This index measures something different: <b>how much effort it takes to get the value a programme promises</b>. Every programme gets a Complication Score out of 100. Higher means harder.</p>
+        <p>The score combines eight things: how complicated earning is, how hard tiers are to reach and keep, the habits you need to build, how hard it is to redeem, how easily value expires, how clearly you can see where you stand, what you must pay or hold to qualify, and how often the rules change.</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card"><h2>How to read a score</h2>
+        <div class="legend" id="start-legend" style="margin-top:var(--cds-gap-sm)"></div>
+        <div class="prose" style="font-size:var(--cds-font-size-caption)">
+          <p><b>Simple (0 to 30):</b> swipe and save. Little to track.</p>
+          <p><b>Manageable (31 to 55):</b> a few rules to keep an eye on.</p>
+          <p><b>Complex (56 to 75):</b> real effort to stay maximised.</p>
+          <p><b>Maze (76 to 100):</b> the value is there, but it takes ongoing work to unlock.</p>
+          <p>A high score is not a verdict on value. Some of the most complicated programmes also pay the most.</p>
+        </div>
+      </div>
+      <div class="card"><h2>Who it is scored for</h2>
+        <div class="prose" style="font-size:var(--cds-font-size-caption); margin-top:var(--cds-gap-sm)">
+          <p>The same programme is easier for someone who already banks, shops or lives the way it rewards. Use <b>Score for</b> at the top to switch between:</p>
+          <p><b>Overall:</b> the average across all four personas. Start here.</p>
+          <p><b>Entry, Mass market, Middle income, Affluent:</b> income-based personas with different everyday habits. Only the habit burden part of the score changes.</p>
+          <p>Persona habits are early assumptions and will be replaced with real behaviour as people use the platform.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="start-tour">
+      <h2>What is in each tab</h2>
+      <ul class="ev" style="margin-top:var(--cds-gap-sm)">
+        <li><span class="d">Overview</span><span></span><span class="x">The league table of all programmes by category, headline figures, and which categories are hardest. Click any bar to see why it scores what it does. <button class="sort go" data-go="overview">Open</button></span></li>
+        <li><span class="d">Why this score</span><span></span><span class="x">Pick a programme for a plain-language explanation, the points each dimension adds, and the evidence behind every rating. <button class="sort go" data-go="why">Open</button></span></li>
+        <li><span class="d">Where the pain sits</span><span></span><span class="x">Every programme's eight ratings side by side, plus a watch-out list of rules that cost people value. <button class="sort go" data-go="breakdown">Open</button></span></li>
+        <li><span class="d">Personas</span><span></span><span class="x">How much harder each programme is for people with fewer of the habits it rewards, and the assumptions behind each persona. <button class="sort go" data-go="personas">Open</button></span></li>
+        <li><span class="d">Fairness</span><span></span><span class="x">Complexity against the Reward Gap: how much more the best tier earns than the entry tier for the same spend. <button class="sort go" data-go="fairness">Open</button></span></li>
+        <li><span class="d">Network</span><span></span><span class="x">How programmes link up through partners, and the brands whose rewards only exist inside other programmes. <button class="sort go" data-go="network">Open</button></span></li>
+        <li><span class="d">Rule changes</span><span></span><span class="x">A timeline and log of rule changes in 2025 and 2026, marked by whether they made life harder or easier. <button class="sort go" data-go="changes">Open</button></span></li>
+        <li><span class="d">Method</span><span></span><span class="x">How the score is calculated, the weights, and every rating in one sortable table. <button class="sort go" data-go="method">Open</button></span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Good to know</h2>
+      <div class="prose" style="font-size:var(--cds-font-size-caption); margin-top:var(--cds-gap-sm)">
+        <p>Ratings come from public programme rules and South African press coverage researched in October 2026. Rules change often, so some details may already be out of date. Programmes marked low confidence had thinner sources.</p>
+        <p>This is an independent index. It is not affiliated with or endorsed by any of the programmes it scores, and it is not financial advice.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- OVERVIEW -->
+  <section data-page="overview" id="overview" class="hidden">
+    <div class="kpis">
+      <div class="kpi"><div class="k">Programmes scored</div><div class="v" data-source="kpis" data-field="n" data-where="persona=overall">—</div><div class="n">Across 8 categories</div></div>
+      <div class="kpi"><div class="k">Average score</div><div class="v" data-source="kpis" data-field="avg" data-where="persona=overall">—</div><div class="n">Out of 100, higher is harder</div></div>
+      <div class="kpi"><div class="k">Complex or Maze</div><div class="v" data-source="kpis" data-field="complex" data-where="persona=overall">—</div><div class="n">Score above 55</div></div>
+      <div class="kpi"><div class="k">Hardest programme</div><div class="v" style="font-size:var(--cds-font-size-heading)" data-source="kpis" data-field="hardest" data-where="persona=overall">—</div><div class="n">Score <span data-source="kpis" data-field="hardestScore" data-where="persona=overall">—</span></div></div>
+    </div>
+
+    <div class="card" id="league-card">
+      <h2>League table</h2>
+      <p class="note">Every programme's Complication Score for the selected persona, grouped by category. Click a bar to see why it scores what it does. 0 to 30 Simple, 31 to 55 Manageable, 56 to 75 Complex, 76 to 100 Maze.</p>
+      <div class="legend" id="band-legend"></div>
+      <div class="chart" id="league" data-source="scores"></div>
+    </div>
+
+    <div class="card" id="category-card">
+      <h2>Average score by category</h2>
+      <p class="note">Programmes that try to change how you live or bank cluster at the top. Programmes that simply reward spending stay simple.</p>
+      <div class="chart" id="cats" data-source="catavg"></div>
+    </div>
+  </section>
+
+
+  <!-- WHY -->
+  <section data-page="why" id="why" class="hidden">
+    <div class="card" id="why-card">
+      <div class="why-head">
+        <select class="pick" id="why-pick" aria-label="Programme" data-source="programs"></select>
+        <span class="why-score" id="why-score" data-source="wide" data-field="score_overall" data-where="program=FNB%20eBucks">—</span>
+        <span class="hint" id="why-band"></span>
+      </div>
+      <p class="why-sum" id="why-sum" data-source="points catavg"></p>
+      <p class="note">Each bar shows the points a dimension adds, out of the most it could add. Longer bars are where the complication comes from.</p>
+      <div class="chart" id="why-chart" data-source="points"></div>
+    </div>
+    <div class="card" id="why-ev-card">
+      <h2>The evidence behind each rating</h2>
+      <p class="note">Ratings run 1 (simple) to 5 (hard). Sorted by points added. Where no note is shown, the rating reflects the programme's general rules with nothing notable either way.</p>
+      <ul class="ev" id="why-ev" data-source="reasons points"></ul>
+    </div>
+  </section>
+
+  <!-- BREAKDOWN -->
+  <section data-page="breakdown" id="breakdown" class="hidden">
+    <div class="card" id="heat-card">
+      <h2>Ratings by dimension</h2>
+      <p class="note">Each cell is a 1 to 5 rating. Darker means harder. Columns: earning complexity, tier clarity, habit burden, redemption friction, expiry and breakage, visibility, prerequisites and fees, and rule volatility (how often the rules changed). Habit burden changes with the persona; the other seven are the same for everyone. Hover a cell for the rating.</p>
+      <div class="chart" id="heat" data-source="programs scores"></div>
+    </div>
+    <div class="card" id="watch-card">
+      <h2>Watch-out list</h2>
+      <p class="note">Things the advisor should flag: rules that cost people value or push habits that may not be good for them.</p>
+      <div class="tbox">
+        <table id="watch" data-source="programs" data-row-key="program">
+          <thead><tr><th data-field="program">Programme</th><th data-field="category">Category</th><th data-field="watchout">Watch out for</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERSONAS -->
+  <section data-page="personas" id="personas" class="hidden">
+    <div class="callout">The same programme is harder for some people than others. Each dot is a persona; the gap shows how much harder a programme is for someone who doesn't already bank, shop or live the way it rewards.</div>
+    <div class="card" id="dumbbell-card">
+      <h2>Score by persona</h2>
+      <p class="note">Sorted by the gap between Entry and Affluent. Phase 1 baselines are assumed and will be replaced by real behaviour from users.</p>
+      <div class="legend" id="persona-legend"></div>
+      <div class="chart" id="dumbbell" data-source="scores"></div>
+    </div>
+    <div class="card" id="persona-card">
+      <h2>Persona baselines</h2>
+      <p class="note">Assumed share of each persona who already does each behaviour today. Informed by the Truth and BrandMapp income split, not measured.</p>
+      <div class="tbox">
+        <table id="ptable" data-source="personas" data-row-key="persona">
+          <thead><tr><th data-field="label">Persona</th><th data-field="description">Who</th><th data-field="card">Card use</th><th data-field="salary">Salary in</th><th data-field="credit">Credit</th><th data-field="insure">Insurance</th><th data-field="invest">Investments</th><th data-field="exercise">Exercise</th><th data-field="travel">Flies</th><th data-field="drive">Drives</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAIRNESS -->
+  <section data-page="fairness" id="fairness" class="hidden">
+    <div class="callout">Complexity and fairness are different things. The Reward Gap is the best-tier rate divided by the entry-tier rate for the same spend. 1x means everyone gets the same deal.</div>
+    <div class="card" id="scatter-card">
+      <h2>Complication against Reward Gap</h2>
+      <p class="note">Programmes with a measured gap only. Reward Gap on a log scale. Top right is complex and unequal, where the advisor matters most.</p>
+      <div class="chart" id="scatter" data-source="programs scores"></div>
+    </div>
+  </section>
+
+  <!-- NETWORK -->
+  <section data-page="network" id="network" class="hidden">
+    <div class="card" id="net-card">
+      <h2>How programmes link up</h2>
+      <p class="note">A line joins a programme to a partner where you can earn or spend. Larger circles have more links. Hollow circles are brands with no rewards programme of their own; their rewards only exist through other programmes. Drag to rearrange.</p>
+      <div class="chart" id="net" data-source="links scores"></div>
+    </div>
+  </section>
+
+  <!-- CHANGES -->
+  <section data-page="changes" id="changes" class="hidden">
+    <div class="card" id="changes-card">
+      <h2>Rule changes, 2025 to 2026</h2>
+      <p class="note">Dated changes found in the research. Effect is from the customer's point of view.</p>
+      <div class="chart" id="timeline" data-source="changelog"></div>
+    </div>
+    <div class="card" id="changes-table-card">
+      <h2>Change log</h2>
+      <input class="search" id="cl-search" type="search" placeholder="Filter changes" aria-label="Filter changes">
+      <div class="tbox">
+        <table id="cl" data-source="changelog" data-row-key="month,program">
+          <thead><tr><th data-field="month">Month</th><th data-field="program">Programme</th><th data-field="change">Change</th><th data-field="effect">Effect</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHOD -->
+  <section data-page="method" id="method" class="hidden">
+    <div class="card" id="method-card">
+      <h2>How the score works</h2>
+      <div class="prose">
+        <p>Each programme is rated 1 to 5 on eight dimensions. Each rating becomes (rating minus 1) divided by 4, times the weight, and the eight are added up. All 1s scores 0 and all 5s scores 100.</p>
+        <p>Habit burden is the only dimension that changes by persona. For each behaviour a programme asks for, the gap between what it requires and what the persona already does is weighted by effort (passive, admin, taking a product, changing your lifestyle) and frequency (weekly, monthly, annual).</p>
+        <p>The score measures effort, not value or fairness. A programme can be complex for good reasons. The Reward Gap is shown separately so readers can judge fairness for themselves.</p>
+      </div>
+      <div class="tbox" style="margin-top:var(--cds-gap-md)">
+        <table id="mtable" data-source="method" data-row-key="key">
+          <thead><tr><th data-field="dimension">Dimension</th><th data-field="weight">Weight</th><th data-field="measures">What it measures</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card" id="all-card">
+      <h2>All scores</h2>
+      <input class="search" id="all-search" type="search" placeholder="Filter programmes" aria-label="Filter programmes">
+      <div class="tbox">
+        <table id="alltable" data-source="programs" data-row-key="program">
+          <thead><tr>
+            <th data-field="program"><button class="sort" data-k="program">Programme</button></th>
+            <th data-field="category"><button class="sort" data-k="category">Category</button></th>
+            <th data-source="wide" data-field="score_overall" class="th-score"><button class="sort" data-k="score">Score</button></th>
+            <th data-field="earning"><button class="sort" data-k="earning">Earn</button></th>
+            <th data-field="tier"><button class="sort" data-k="tier">Tier</button></th>
+            <th data-source="wide" data-field="habit_overall" class="th-habit"><button class="sort" data-k="habit">Habit</button></th>
+            <th data-field="redemption"><button class="sort" data-k="redemption">Redeem</button></th>
+            <th data-field="expiry"><button class="sort" data-k="expiry">Expiry</button></th>
+            <th data-field="visibility"><button class="sort" data-k="visibility">Visibility</button></th>
+            <th data-field="prereq"><button class="sort" data-k="prereq">Prereqs</button></th>
+            <th data-field="volatility"><button class="sort" data-k="volatility">Volatility</button></th>
+            <th data-field="rewardGapLabel">Reward Gap</th>
+            <th data-field="confidence"><button class="sort" data-k="confidence">Confidence</button></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+// ---- calculations (visible to readers in Sources) ----
+dash.calc('kpis', {
+  title: 'Headline figures by persona',
+  description: 'Count, average, Complex-or-Maze count, hardest programme, and banking vs other averages, per persona.',
+  inputs: ['scores'],
+  fn: (scores) => {
+    const out = [];
+    for (const persona of [...new Set(scores.map((r) => r.persona))]) {
+      const rows = scores.filter((r) => r.persona === persona);
+      const avg = (a) => Math.round(a.reduce((s, r) => s + Number(r.score), 0) / a.length);
+      const top = rows.reduce((a, b) => (Number(b.score) > Number(a.score) ? b : a));
+      const bank = rows.filter((r) => r.category === 'Banking');
+      const other = rows.filter((r) => r.category !== 'Banking');
+      out.push({ persona, n: rows.length, avg: avg(rows), complex: rows.filter((r) => Number(r.score) > 55).length,
+        hardest: top.program, hardestScore: Number(top.score), bankAvg: avg(bank), otherAvg: avg(other) });
+    }
+    return out;
+  },
+});
+dash.calc('catavg', {
+  title: 'Average score by category',
+  description: 'Mean Complication Score per category and persona.',
+  inputs: ['scores'],
+  fn: (scores) => {
+    const g = new Map();
+    for (const r of scores) {
+      const k = r.category + '|' + r.persona;
+      if (!g.has(k)) g.set(k, { category: r.category, persona: r.persona, total: 0, n: 0 });
+      const x = g.get(k); x.total += Number(r.score); x.n += 1;
+    }
+    return [...g.values()].map((x) => ({ category: x.category, persona: x.persona, avg: Math.round(x.total / x.n), n: x.n }));
+  },
+});
+dash.calc('points', {
+  title: 'Points added by each dimension',
+  description: 'For each programme and persona: each dimension’s rating, its weight and the points it adds, (rating − 1) ÷ 4 × weight.',
+  inputs: ['programs', 'scores'],
+  fn: (programs, scores) => {
+    const W = { earning: 15, tier: 15, habit: 15, redemption: 15, expiry: 10, visibility: 10, prereq: 10, volatility: 10 };
+    const L = { earning: 'Earning complexity', tier: 'Tier clarity', habit: 'Habit burden', redemption: 'Redemption friction', expiry: 'Expiry and breakage', visibility: 'Visibility', prereq: 'Prerequisites and fees', volatility: 'Rule volatility' };
+    const out = [];
+    for (const s of scores) {
+      const p = programs.find((r) => r.program === s.program);
+      for (const k of Object.keys(W)) {
+        const rating = k === 'habit' ? Number(s.habit) : Number(p[k]);
+        out.push({ program: s.program, persona: s.persona, dimension: k, label: L[k], rating, weight: W[k], points: Math.round((rating - 1) / 4 * W[k] * 10) / 10 });
+      }
+    }
+    return out;
+  },
+});
+dash.calc('wide', {
+  title: 'Score and habit per persona',
+  description: 'One row per programme with its score and habit rating for each persona.',
+  inputs: ['scores'],
+  fn: (scores) => {
+    const m = new Map();
+    for (const r of scores) {
+      if (!m.has(r.program)) m.set(r.program, { program: r.program });
+      const o = m.get(r.program);
+      o['score_' + r.persona] = Number(r.score);
+      o['habit_' + r.persona] = Number(r.habit);
+    }
+    return [...m.values()];
+  },
+});
+</script>
+
+<script>
+window.RC = (() => {
+  const root = document.getElementById('dash-root') || document.documentElement;
+  const css = (n) => getComputedStyle(root).getPropertyValue(n).trim();
+  const PERSONAS = [['entry', 'Entry'], ['mass', 'Mass market'], ['middle', 'Middle income'], ['affluent', 'Affluent']];
+  const CHOICES = [['overall', 'Overall'], ...PERSONAS];
+  const BANDS = [['Simple', 0, 30], ['Manageable', 31, 55], ['Complex', 56, 75], ['Maze', 76, 100]];
+  const band = (s) => (s <= 30 ? 'Simple' : s <= 55 ? 'Manageable' : s <= 75 ? 'Complex' : 'Maze');
+  const ramp = () => {
+    const lo = css('--cds-chart-muted') || '#bbb';
+    const hi = css('--cds-chart-status-critical') || '#c33';
+    return (t) => d3.interpolateRgb(lo, hi)(Math.max(0, Math.min(1, t)));
+  };
+  const bandColor = (b) => { const r = ramp(); return { Simple: r(0.05), Manageable: r(0.38), Complex: r(0.7), Maze: r(1) }[b]; };
+  const fail = (el) => { el.replaceChildren(); const d = document.createElement('div'); d.className = 'fail'; d.textContent = 'Failed to load'; el.appendChild(d); };
+  function tip(container) {
+    let t = container.querySelector(':scope > .tip');
+    if (!t) { t = document.createElement('div'); t.className = 'tip'; container.appendChild(t); }
+    return {
+      show(event, title, lines) {
+        t.replaceChildren();
+        const h = document.createElement('div'); h.className = 't'; h.textContent = title; t.appendChild(h);
+        for (const l of lines) { const p = document.createElement('div'); p.textContent = l; t.appendChild(p); }
+        const box = container.getBoundingClientRect();
+        let x = event.clientX - box.left + 12, y = event.clientY - box.top + 12;
+        t.style.opacity = 1;
+        const w = t.offsetWidth, hgt = t.offsetHeight;
+        if (x + w > box.width) x = Math.max(0, event.clientX - box.left - w - 12);
+        if (y + hgt > box.height) y = Math.max(0, event.clientY - box.top - hgt - 12);
+        t.style.left = x + 'px'; t.style.top = y + 'px';
+      },
+      hide() { t.style.opacity = 0; },
+    };
+  }
+  const measure = (svg, texts, size) => {
+    const g = svg.append('g').attr('opacity', 0);
+    let w = 0;
+    for (const s of texts) { const n = g.append('text').attr('font-size', size).text(s).node(); w = Math.max(w, n.getComputedTextLength()); }
+    g.remove();
+    return w;
+  };
+  return { css, PERSONAS, CHOICES, BANDS, band, ramp, bandColor, fail, tip, measure };
+})();
+</script>
+
+<script>
+(() => {
+  const { PERSONAS, CHOICES, BANDS, bandColor, fail, tip, measure } = window.RC;
+  const fmtPct = d3.format('.0%');
+  let tab = 'overview';
+  if (!dash.params().persona) dash.setParams({ persona: 'overall' });
+  const persona = () => dash.params().persona || 'overall';
+  const plabel = () => (CHOICES.find((p) => p[0] === persona()) || CHOICES[0])[1];
+  const isAll = () => persona() === 'overall';
+  const forWho = () => (isAll() ? 'across all personas' : 'for ' + plabel().toLowerCase() + ' customers');
+
+  // persona control
+  const seg = document.getElementById('persona-seg');
+  for (const [id, label] of CHOICES) {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.dataset.p = id;
+    b.addEventListener('click', () => dash.setParams({ persona: id }));
+    seg.appendChild(b);
+  }
+  // tabs
+  const tabs = [...document.querySelectorAll('.tabs button')];
+  const show = (name) => {
+    tab = name;
+    for (const b of tabs) b.setAttribute('aria-selected', String(b.dataset.tab === name));
+    for (const s of document.querySelectorAll('[data-page]')) s.classList.toggle('hidden', s.dataset.page !== name);
+    dash.setLink(name);
+    draw();
+  };
+  for (const b of tabs) b.addEventListener('click', () => show(b.dataset.tab));
+  for (const b of document.querySelectorAll('.go')) b.addEventListener('click', () => { show(b.dataset.go); document.getElementById('top').scrollIntoView({ block: 'start' }); });
+
+  // legends
+  const bl = document.getElementById('band-legend');
+  const drawLegends = () => {
+    const mk = () => BANDS.map(([b]) => { const s = document.createElement('span'); const i = document.createElement('i'); i.style.background = bandColor(b); s.append(i, b); return s; });
+    bl.replaceChildren(...mk()); document.getElementById('start-legend').replaceChildren(...mk());
+    const pl = document.getElementById('persona-legend');
+    pl.replaceChildren(...PERSONAS.map(([id, label], k) => { const s = document.createElement('span'); const i = document.createElement('i'); i.style.background = dash.colors[k]; i.style.borderRadius = '50%'; s.append(i, label); return s; }), (() => { const s = document.createElement('span'); const i = document.createElement('i'); i.style.background = 'var(--color-fg)'; i.style.width = '3px'; s.append(i, 'Overall'); return s; })());
+  };
+
+  const setWhere = () => {
+    for (const el of document.querySelectorAll('[data-source="kpis"]')) el.setAttribute('data-where', 'persona=' + persona());
+  };
+
+  function fillKpis() {
+    const k = dash.data('kpis');
+    for (const el of document.querySelectorAll('[data-source="kpis"]')) {
+      if (k.status === 'ok') {
+        const row = k.data.find((r) => r.persona === persona());
+        el.textContent = row ? String(row[el.dataset.field]) : '—';
+        el.classList.remove('dash-skeleton');
+      } else el.textContent = '—';
+    }
+    const w = forWho(); document.querySelector('.t-who').textContent = w.charAt(0).toUpperCase() + w.slice(1);
+  }
+
+  // ---------- League ----------
+  function drawLeague() {
+    const el = document.getElementById('league');
+    const s = dash.data('scores');
+    if (s.status === 'error') return fail(el);
+    if (s.status !== 'ok') { el.replaceChildren(); return; }
+    const rows = s.data.filter((r) => r.persona === persona()).map((r) => ({ ...r, score: Number(r.score) }));
+    const cats = [...d3.group(rows, (r) => r.category)].map(([c, rs]) => ({ c, avg: d3.mean(rs, (r) => r.score), rs: rs.sort((a, b) => b.score - a.score) }))
+      .sort((a, b) => b.avg - a.avg);
+    const W = el.clientWidth || 600, rowH = 22, headH = 26;
+    el.replaceChildren();
+    const svg = d3.select(el).append('svg').attr('width', '100%');
+    const labelW = measure(svg, rows.map((r) => r.program), 12) + 12;
+    const m = { l: Math.min(labelW, W * 0.45), r: 36, t: 18 };
+    let y = m.t; const items = [];
+    for (const c of cats) { items.push({ head: c.c, y }); y += headH; for (const r of c.rs) { items.push({ r, y }); y += rowH; } y += 6; }
+    const H = y + 4;
+    svg.attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const x = d3.scaleLinear([0, 100], [m.l, W - m.r]);
+    const g = svg.append('g');
+    for (const t of [30, 55, 75]) g.append('line').attr('x1', x(t)).attr('x2', x(t)).attr('y1', m.t - 4).attr('y2', H - 4).attr('stroke', 'var(--cds-chart-grid)').attr('stroke-dasharray', '3 3');
+    for (const t of [0, 30, 55, 75, 100]) g.append('text').attr('x', x(t)).attr('y', 10).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(t);
+    const tp = tip(el);
+    for (const it of items) {
+      if (it.head) { g.append('text').attr('x', 0).attr('y', it.y + 17).attr('font-size', 12).attr('font-weight', 600).attr('fill', 'var(--color-fg)').text(it.head); continue; }
+      const r = it.r, cy = it.y + rowH / 2;
+      g.append('text').attr('x', m.l - 8).attr('y', cy + 4).attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg)').text(r.program);
+      g.append('rect').attr('x', x(0)).attr('y', cy - 7).attr('width', Math.max(2, x(r.score) - x(0))).attr('height', 14).attr('rx', 4).attr('fill', bandColor(r.band))
+        .style('cursor', 'pointer').on('click', () => { dash.setParams({ program: r.program }); show('why'); })
+        .on('mousemove', (e) => tp.show(e, r.program, [`${r.score} · ${r.band}`, `Habit rating ${(+r.habit).toFixed(1)} ${forWho()}`, 'Click for the reasons']))
+        .on('mouseleave', () => tp.hide());
+      g.append('text').attr('x', x(r.score) + 5).attr('y', cy + 4).attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(r.score);
+    }
+  }
+
+  // ---------- Categories ----------
+  function drawCats() {
+    const el = document.getElementById('cats');
+    const s = dash.data('catavg');
+    if (s.status === 'error') return fail(el);
+    if (s.status !== 'ok') { el.replaceChildren(); return; }
+    const rows = s.data.filter((r) => r.persona === persona()).sort((a, b) => b.avg - a.avg);
+    const W = el.clientWidth || 600, rowH = 30;
+    el.replaceChildren();
+    const svg = d3.select(el).append('svg').attr('width', '100%');
+    const l = Math.min(measure(svg, rows.map((r) => r.category), 12) + 14, W * 0.45);
+    const H = rows.length * rowH + 10;
+    svg.attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const x = d3.scaleLinear([0, 100], [l, W - 40]);
+    const tp = tip(el);
+    rows.forEach((r, i) => {
+      const cy = i * rowH + rowH / 2 + 4;
+      svg.append('text').attr('x', l - 8).attr('y', cy + 4).attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg)').text(r.category);
+      svg.append('rect').attr('x', x(0)).attr('y', cy - 9).attr('width', x(r.avg) - x(0)).attr('height', 18).attr('rx', 4).attr('fill', bandColor(window.RC.band(r.avg)))
+        .on('mousemove', (e) => tp.show(e, r.category, [`Average ${r.avg} across ${r.n} programme${r.n === 1 ? '' : 's'}`])).on('mouseleave', () => tp.hide());
+      svg.append('text').attr('x', x(r.avg) + 6).attr('y', cy + 4).attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(r.avg);
+    });
+  }
+
+  // ---------- Heatmap ----------
+  const DIMS = [['earning', 'Earning'], ['tier', 'Tiers'], ['habit', 'Habits'], ['redemption', 'Redeeming'], ['expiry', 'Expiry'], ['visibility', 'Visibility'], ['prereq', 'Prerequisites'], ['volatility', 'Rule changes']];
+  const DIMFULL = { earning: 'Earning complexity', tier: 'Tier clarity', habit: 'Habit burden', redemption: 'Redemption friction', expiry: 'Expiry and breakage', visibility: 'Visibility', prereq: 'Prerequisites and fees', volatility: 'Rule volatility' };
+  function drawHeat() {
+    const el = document.getElementById('heat');
+    const p = dash.data('programs'), s = dash.data('scores');
+    if (p.status === 'error' || s.status === 'error') return fail(el);
+    if (p.status !== 'ok' || s.status !== 'ok') { el.replaceChildren(); return; }
+    const sc = new Map(s.data.filter((r) => r.persona === persona()).map((r) => [r.program, r]));
+    const rows = p.data.map((r) => ({ ...r, habit: Number(sc.get(r.program)?.habit), score: Number(sc.get(r.program)?.score) })).sort((a, b) => b.score - a.score);
+    const W = el.clientWidth || 600, cellH = 20;
+    el.replaceChildren();
+    const svg = d3.select(el).append('svg').attr('width', '100%');
+    const l = Math.min(measure(svg, rows.map((r) => r.program), 11) + 12, W * 0.42);
+    const cw0 = (W - l - 36) / DIMS.length;
+    const labW = measure(svg, DIMS.map((d) => d[1]), 11);
+    const angled = labW + 6 > cw0;
+    const top = angled ? Math.ceil(labW * 0.66) + 18 : 26, H = top + rows.length * cellH + 4;
+    svg.attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const cw = (W - l - 36) / DIMS.length;
+    const ramp = window.RC.ramp();
+    const tp = tip(el);
+    DIMS.forEach(([k, lab], j) => {
+      const t = svg.append('text').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(lab);
+      t.append('title').text(DIMFULL[k]);
+      if (angled) t.attr('text-anchor', 'start').attr('transform', `translate(${l + j * cw + cw / 2 - 2},${top - 6}) rotate(-42)`);
+      else t.attr('x', l + j * cw + cw / 2).attr('y', 14).attr('text-anchor', 'middle');
+    });
+    svg.append('text').attr('x', W - 18).attr('y', top - 8).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text('Score');
+    rows.forEach((r, i) => {
+      const yy = top + i * cellH;
+      svg.append('text').attr('x', l - 8).attr('y', yy + cellH / 2 + 4).attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--color-fg)').text(r.program);
+      DIMS.forEach(([k, lab], j) => {
+        const v = Number(r[k]);
+        svg.append('rect').attr('x', l + j * cw + 1).attr('y', yy + 1).attr('width', cw - 2).attr('height', cellH - 2).attr('rx', 3).attr('fill', ramp((v - 1) / 4))
+          .on('mousemove', (e) => tp.show(e, r.program, [`${DIMFULL[k]}: ${v.toFixed(k === 'habit' ? 1 : 0)} of 5`])).on('mouseleave', () => tp.hide());
+      });
+      svg.append('text').attr('x', W - 18).attr('y', yy + cellH / 2 + 4).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg)').text(r.score);
+    });
+  }
+
+  // ---------- Dumbbell ----------
+  function drawDumbbell() {
+    const el = document.getElementById('dumbbell');
+    const s = dash.data('scores');
+    if (s.status === 'error') return fail(el);
+    if (s.status !== 'ok') { el.replaceChildren(); return; }
+    const by = d3.group(s.data, (r) => r.program);
+    const rows = [...by].map(([program, rs]) => {
+      const o = { program }; for (const r of rs) o[r.persona] = Number(r.score);
+      o.gap = o.entry - o.affluent; return o;
+    }).sort((a, b) => b.gap - a.gap || b.middle - a.middle);
+    const W = el.clientWidth || 600, rowH = 20;
+    el.replaceChildren();
+    const svg = d3.select(el).append('svg').attr('width', '100%');
+    const l = Math.min(measure(svg, rows.map((r) => r.program), 11) + 12, W * 0.42);
+    const H = 20 + rows.length * rowH + 4;
+    svg.attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const x = d3.scaleLinear([0, 100], [l, W - 44]);
+    for (const t of [0, 25, 50, 75, 100]) {
+      svg.append('line').attr('x1', x(t)).attr('x2', x(t)).attr('y1', 16).attr('y2', H).attr('stroke', 'var(--cds-chart-grid)');
+      svg.append('text').attr('x', x(t)).attr('y', 11).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(t);
+    }
+    svg.append('text').attr('x', W - 4).attr('y', 11).attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text('Gap');
+    const tp = tip(el);
+    rows.forEach((r, i) => {
+      const cy = 20 + i * rowH + rowH / 2;
+      svg.append('text').attr('x', l - 8).attr('y', cy + 4).attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--color-fg)').text(r.program);
+      const vals = PERSONAS.map(([id]) => r[id]);
+      svg.append('line').attr('x1', x(d3.min(vals))).attr('x2', x(d3.max(vals))).attr('y1', cy).attr('y2', cy).attr('stroke', 'var(--cds-chart-axis)').attr('stroke-width', 2).attr('stroke-linecap', 'round');
+      PERSONAS.forEach(([id, label], k) => {
+        svg.append('circle').attr('cx', x(r[id])).attr('cy', cy).attr('r', id === persona() ? 6 : 4.5).attr('fill', dash.colors[k])
+          .attr('stroke', id === persona() ? 'var(--color-fg)' : 'none').attr('stroke-width', 1.5)
+          .on('mousemove', (e) => tp.show(e, r.program, CHOICES.map(([pid, pl]) => `${pl}: ${r[pid]}`))).on('mouseleave', () => tp.hide());
+      });
+      if (r.overall !== undefined) svg.append('line').attr('x1', x(r.overall)).attr('x2', x(r.overall)).attr('y1', cy - 7).attr('y2', cy + 7).attr('stroke', 'var(--color-fg)').attr('stroke-width', isAll() ? 2.5 : 1.5).attr('stroke-linecap', 'round');
+      svg.append('text').attr('x', W - 4).attr('y', cy + 4).attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(r.gap > 0 ? '+' + r.gap : r.gap);
+    });
+  }
+
+  // ---------- Scatter ----------
+  function drawScatter() {
+    const el = document.getElementById('scatter');
+    const p = dash.data('programs'), s = dash.data('scores');
+    if (p.status === 'error' || s.status === 'error') return fail(el);
+    if (p.status !== 'ok' || s.status !== 'ok') { el.replaceChildren(); return; }
+    const sc = new Map(s.data.filter((r) => r.persona === persona()).map((r) => [r.program, Number(r.score)]));
+    const rows = p.data.filter((r) => r.rewardGap !== null && r.rewardGap !== '' && !isNaN(Number(r.rewardGap)))
+      .map((r) => ({ program: r.program, gap: Number(r.rewardGap), label: r.rewardGapLabel, score: sc.get(r.program) }));
+    const W = el.clientWidth || 600, H = Math.max(320, Math.min(480, W * 0.6));
+    el.replaceChildren();
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const m = { l: 44, r: 16, t: 16, b: 40 };
+    const x = d3.scaleLinear([0, 100], [m.l, W - m.r]);
+    const y = d3.scaleLog([1, 200], [H - m.b, m.t]);
+    svg.append('rect').attr('x', x(55)).attr('y', y(200)).attr('width', x(100) - x(55)).attr('height', y(4) - y(200)).attr('fill', 'var(--cds-chart-status-critical)').attr('opacity', 0.07);
+    svg.append('text').attr('x', W - m.r - 4).attr('y', m.t + 12).attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text('Complex and unequal');
+    for (const t of [1, 2, 5, 10, 20, 50, 100, 200]) {
+      svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(t)).attr('y2', y(t)).attr('stroke', 'var(--cds-chart-grid)');
+      svg.append('text').attr('x', m.l - 6).attr('y', y(t) + 4).attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(t + 'x');
+    }
+    for (const t of [0, 25, 50, 75, 100]) svg.append('text').attr('x', x(t)).attr('y', H - m.b + 16).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(t);
+    svg.append('text').attr('x', (m.l + W - m.r) / 2).attr('y', H - 6).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text('Complication Score');
+    const tp = tip(el);
+    // jitter identical 1x points along y slightly for visibility
+    const seen = new Map();
+    for (const r of rows) {
+      const key = r.gap + '|' + Math.round(r.score / 3);
+      const n = seen.get(key) || 0; seen.set(key, n + 1);
+      const cy = y(r.gap) - n * 6;
+      svg.append('circle').attr('cx', x(r.score)).attr('cy', cy).attr('r', 6).attr('fill', window.RC.bandColor(window.RC.band(r.score))).attr('stroke', 'var(--color-bg)').attr('stroke-width', 1.5)
+        .on('mousemove', (e) => tp.show(e, r.program, [`Score ${r.score}`, `Reward Gap ${r.label}`])).on('mouseleave', () => tp.hide());
+      if (r.gap >= 5 || r.score >= 55) svg.append('text').attr('x', x(r.score) + 9).attr('y', cy + 4).attr('font-size', 11).attr('fill', 'var(--color-fg)').text(r.program);
+    }
+  }
+
+  // ---------- Network ----------
+  const ALIAS = { 'Clicks': 'Clicks ClubCard', 'Checkers': 'Checkers Xtra Savings', 'Pick n Pay': 'Pick n Pay Smart Shopper', 'Shell': 'Shell V+', 'Astron Energy': 'Astron Energy Rewards',
+    'Dis-Chem': 'Dis-Chem Better Rewards', 'Woolworths': 'Woolworths MyDifference', 'Ster-Kinekor': 'Ster-Kinekor SK Club', 'Makro': 'Makro mRewards', 'City Lodge': 'City Lodge Rewards', 'Capitec': 'Capitec Live Better' };
+  let netPos = null;
+  function drawNet() {
+    const el = document.getElementById('net');
+    const L = dash.data('links'), s = dash.data('scores');
+    if (L.status === 'error' || s.status === 'error') return fail(el);
+    if (L.status !== 'ok' || s.status !== 'ok') { el.replaceChildren(); return; }
+    const sc = new Map(s.data.filter((r) => r.persona === persona()).map((r) => [r.program, Number(r.score)]));
+    const edges = L.data.map((r) => ({ source: r.program, target: ALIAS[r.partner] || r.partner }));
+    const ids = [...new Set(edges.flatMap((e) => [e.source, e.target]))];
+    const deg = d3.rollup(edges.flatMap((e) => [e.source, e.target]), (v) => v.length, (d) => d);
+    const W = el.clientWidth || 600, H = Math.max(420, Math.min(620, W * 0.75));
+    const nodes = ids.map((id) => ({ id, score: sc.get(id), deg: deg.get(id) || 1, ...(netPos?.get(id) || {}) }));
+    const links = edges.map((e) => ({ ...e }));
+    const sim = d3.forceSimulation(nodes).force('link', d3.forceLink(links).id((d) => d.id).distance(90))
+      .force('charge', d3.forceManyBody().strength(-380)).force('center', d3.forceCenter(W / 2, H / 2))
+      .force('collide', d3.forceCollide((d) => Math.max(14 + d.deg * 2, d.id.length * 3.1)).iterations(3))
+      .force('x', d3.forceX(W / 2).strength(0.05)).force('y', d3.forceY(H / 2).strength(0.08)).stop();
+    if (!netPos) for (let i = 0; i < 320; i++) sim.tick(); else sim.alpha(0.05).tick(1);
+    el.replaceChildren();
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const clamp = (n) => { n.x = Math.max(20, Math.min(W - 20, n.x)); n.y = Math.max(20, Math.min(H - 20, n.y)); };
+    nodes.forEach(clamp);
+    const line = svg.append('g').selectAll('line').data(links).join('line').attr('stroke', 'var(--cds-chart-grid)').attr('stroke-width', 1.5);
+    const tp = tip(el);
+    const node = svg.append('g').selectAll('g').data(nodes).join('g').style('cursor', 'grab');
+    node.append('circle').attr('r', (d) => 5 + d.deg * 1.8)
+      .attr('fill', (d) => (d.score === undefined ? 'var(--color-panel)' : window.RC.bandColor(window.RC.band(d.score))))
+      .attr('stroke', (d) => (d.score === undefined ? 'var(--color-fg-muted)' : 'var(--color-bg)')).attr('stroke-width', 1.5)
+      .attr('stroke-dasharray', (d) => (d.score === undefined ? '3 2' : null));
+    node.append('text').attr('font-size', 11).attr('fill', 'var(--color-fg)').attr('dy', (d) => -(8 + d.deg * 1.8)).attr('text-anchor', 'middle').text((d) => d.id);
+    node.on('mousemove', (e, d) => tp.show(e, d.id, [d.score === undefined ? 'No scored programme' : `Score ${d.score}`, `${d.deg} link${d.deg === 1 ? '' : 's'}`])).on('mouseleave', () => tp.hide());
+    const place = () => {
+      line.attr('x1', (d) => d.source.x).attr('y1', (d) => d.source.y).attr('x2', (d) => d.target.x).attr('y2', (d) => d.target.y);
+      node.attr('transform', (d) => `translate(${d.x},${d.y})`);
+    };
+    place();
+    node.call(d3.drag().on('drag', (e, d) => { const pt = d3.pointer(e, svg.node()); d.x = pt[0]; d.y = pt[1]; clamp(d); place(); })
+      .on('end', () => { netPos = new Map(nodes.map((n) => [n.id, { x: n.x, y: n.y }])); }));
+    netPos = new Map(nodes.map((n) => [n.id, { x: n.x, y: n.y }]));
+  }
+
+  // ---------- Timeline ----------
+  function drawTimeline() {
+    const el = document.getElementById('timeline');
+    const c = dash.data('changelog');
+    if (c.status === 'error') return fail(el);
+    if (c.status !== 'ok') { el.replaceChildren(); return; }
+    const rows = c.data.map((r) => ({ ...r, d: new Date(r.month + '-15T00:00:00Z') }));
+    const progs = [...new Set(rows.map((r) => r.program))];
+    const W = el.clientWidth || 600, rowH = 26;
+    el.replaceChildren();
+    const svg = d3.select(el).append('svg').attr('width', '100%');
+    const l = Math.min(measure(svg, progs, 11) + 12, W * 0.4);
+    const H = 24 + progs.length * rowH;
+    svg.attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const x = d3.scaleUtc([new Date('2025-01-01T00:00:00Z'), new Date('2026-12-31T00:00:00Z')], [l + 8, W - 12]);
+    const yb = d3.scaleBand(progs, [24, H]).padding(0.2);
+    const months = d3.utcMonth.every(W < 560 ? 6 : 3).range(new Date('2025-01-01T00:00:00Z'), new Date('2027-01-01T00:00:00Z'));
+    for (const mth of months) {
+      svg.append('line').attr('x1', x(mth)).attr('x2', x(mth)).attr('y1', 18).attr('y2', H).attr('stroke', 'var(--cds-chart-grid)');
+      svg.append('text').attr('x', x(mth)).attr('y', 12).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(d3.utcFormat('%b %y')(mth));
+    }
+    const col = { Harder: 'var(--cds-chart-status-critical)', Easier: dash.colors[1], Mixed: 'var(--cds-chart-muted)' };
+    const tp = tip(el);
+    for (const p of progs) svg.append('text').attr('x', l).attr('y', yb(p) + yb.bandwidth() / 2 + 4).attr('text-anchor', 'end').attr('font-size', 11).attr('fill', 'var(--color-fg)').text(p);
+    for (const r of rows) {
+      svg.append('circle').attr('cx', x(r.d)).attr('cy', yb(r.program) + yb.bandwidth() / 2).attr('r', 6).attr('fill', col[r.effect] || 'var(--cds-chart-muted)').attr('stroke', 'var(--color-bg)').attr('stroke-width', 1.5)
+        .on('mousemove', (e) => tp.show(e, `${d3.utcFormat('%B %Y')(r.d)} · ${r.effect}`, [r.program, r.change])).on('mouseleave', () => tp.hide());
+    }
+  }
+
+  // ---------- Tables ----------
+  const td = (tr, text, cls) => { const c = document.createElement('td'); c.textContent = text; if (cls) c.className = cls; tr.appendChild(c); return c; };
+  function fillTable(id, ds, filter, cells) {
+    const tb = document.querySelector(`#${id} tbody`);
+    const d = dash.data(ds);
+    tb.replaceChildren();
+    if (d.status !== 'ok') return;
+    for (const r of d.data.filter(filter)) { const tr = document.createElement('tr'); cells(tr, r); tb.appendChild(tr); }
+  }
+  let sortK = 'score', sortDir = -1;
+  for (const b of document.querySelectorAll('#alltable .sort')) b.addEventListener('click', () => {
+    const k = b.dataset.k; if (sortK === k) sortDir *= -1; else { sortK = k; sortDir = ['program', 'category', 'confidence'].includes(k) ? 1 : -1; }
+    tables();
+  });
+  const searchAll = document.getElementById('all-search');
+  const searchCl = document.getElementById('cl-search');
+  searchAll.addEventListener('input', () => tables());
+  searchCl.addEventListener('input', () => tables());
+  function tables() {
+    fillTable('watch', 'programs', (r) => r.watchout, (tr, r) => { td(tr, r.program); td(tr, r.category); td(tr, r.watchout); });
+    fillTable('ptable', 'personas', () => true, (tr, r) => {
+      tr.dataset.key = r.persona; td(tr, r.label); td(tr, r.description);
+      for (const k of ['card', 'salary', 'credit', 'insure', 'invest', 'exercise', 'travel', 'drive']) td(tr, fmtPct(Number(r[k])));
+    });
+    const q1 = searchCl.value.trim().toLowerCase();
+    const cl = dash.data('changelog');
+    const tb = document.querySelector('#cl tbody'); tb.replaceChildren();
+    if (cl.status === 'ok') {
+      for (const r of [...cl.data].sort((a, b) => (a.month < b.month ? 1 : -1)).filter((r) => !q1 || (r.program + ' ' + r.change + ' ' + r.effect).toLowerCase().includes(q1))) {
+        const tr = document.createElement('tr'); td(tr, r.month); td(tr, r.program); td(tr, r.change); td(tr, r.effect, r.effect.toLowerCase()); tb.appendChild(tr);
+      }
+    }
+    fillTable('mtable', 'method', () => true, (tr, r) => { tr.dataset.key = r.key; td(tr, r.dimension); td(tr, r.weight + '%'); td(tr, r.measures); });
+    // all scores
+    const p = dash.data('programs'), sel = dash.data('wide');
+    document.querySelector('.th-score').setAttribute('data-field', 'score_' + persona());
+    document.querySelector('.th-habit').setAttribute('data-field', 'habit_' + persona());
+    const tb2 = document.querySelector('#alltable tbody'); tb2.replaceChildren();
+    if (p.status === 'ok' && sel.status === 'ok') {
+      const m = new Map(sel.data.map((r) => [r.program, { score: r['score_' + persona()], habit: r['habit_' + persona()] }]));
+      const q = searchAll.value.trim().toLowerCase();
+      const rows = p.data.map((r) => ({ ...r, score: m.get(r.program)?.score, habit: m.get(r.program)?.habit }))
+        .filter((r) => !q || (r.program + ' ' + r.category).toLowerCase().includes(q));
+      rows.sort((a, b) => { const A = a[sortK], B = b[sortK]; return (typeof A === 'number' || !isNaN(Number(A)) && typeof A !== 'string' ? (A - B) : String(A).localeCompare(String(B))) * sortDir; });
+      if (['score', 'habit', 'earning', 'tier', 'redemption', 'expiry', 'visibility', 'prereq', 'volatility'].includes(sortK)) rows.sort((a, b) => (Number(a[sortK]) - Number(b[sortK])) * sortDir);
+      for (const r of rows) {
+        const tr = document.createElement('tr');
+        td(tr, r.program); td(tr, r.category); td(tr, String(r.score)); td(tr, String(r.earning)); td(tr, String(r.tier)); td(tr, Number(r.habit).toFixed(1));
+        td(tr, String(r.redemption)); td(tr, String(r.expiry)); td(tr, String(r.visibility)); td(tr, String(r.prereq)); td(tr, String(r.volatility)); td(tr, r.rewardGapLabel); td(tr, r.confidence);
+        tb2.appendChild(tr);
+      }
+      for (const th of document.querySelectorAll('#alltable th')) {
+        const b = th.querySelector('.sort'); th.removeAttribute('aria-sort');
+        if (b && b.dataset.k === sortK) th.setAttribute('aria-sort', sortDir > 0 ? 'ascending' : 'descending');
+      }
+    }
+  }
+
+
+  // ---------- Why ----------
+  const pick = document.getElementById('why-pick');
+  pick.addEventListener('change', () => dash.setParams({ program: pick.value }));
+  const program = () => dash.params().program || 'FNB eBucks';
+  const listJoin = (a) => (a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]);
+  function drawWhy() {
+    const P = dash.data('programs'), pts = dash.data('points'), cat = dash.data('catavg'), rs = dash.data('reasons');
+    if (P.status === 'ok') {
+      const names = P.data.map((r) => r.program).sort((a, b) => a.localeCompare(b));
+      if (pick.options.length !== names.length) pick.replaceChildren(...names.map((n) => new Option(n, n)));
+      pick.value = program();
+    }
+    const chart = document.getElementById('why-chart'), sum = document.getElementById('why-sum'), ev = document.getElementById('why-ev');
+    const scoreEl = document.getElementById('why-score');
+    scoreEl.setAttribute('data-field', 'score_' + persona());
+    scoreEl.setAttribute('data-where', 'program=' + encodeURIComponent(program()));
+    const wide = dash.data('wide');
+    const wrow = wide.status === 'ok' ? wide.data.find((r) => r.program === program()) : null;
+    scoreEl.textContent = wrow ? String(wrow['score_' + persona()]) : '—';
+    if (pts.status === 'error') { fail(chart); return; }
+    if (pts.status !== 'ok' || P.status !== 'ok') { chart.replaceChildren(); sum.textContent = ''; ev.replaceChildren(); return; }
+    const rows = pts.data.filter((r) => r.program === program() && r.persona === persona()).sort((a, b) => b.points - a.points);
+    const prog = P.data.find((r) => r.program === program());
+    const total = Math.round(d3.sum(rows, (r) => r.points));
+    const bnd = window.RC.band(total);
+    document.getElementById('why-band').textContent = bnd + ' ' + forWho();
+    // summary
+    const big = rows.filter((r) => r.rating >= 4);
+    const drivers = (big.length ? big : rows.slice(0, 2)).slice(0, 4).map((r) => r.label.toLowerCase());
+    const easy = rows.filter((r) => r.rating <= 2).map((r) => r.label.toLowerCase());
+    const share = Math.round(d3.sum((big.length ? big : rows.slice(0, 2)).slice(0, 4), (r) => r.points) / Math.max(1, total) * 100);
+    const ca = cat.status === 'ok' ? cat.data.find((r) => r.category === prog.category && r.persona === persona()) : null;
+    let text = `${program()} scores ${total} out of 100, which puts it in the ${bnd} band ${forWho()}.`;
+    if (total > 30 && drivers.length) text += ` Most of that (${share}%) comes from ${listJoin(drivers)}.`;
+    else text += ` It stays simple because ${listJoin(rows.filter((r) => r.rating <= 1.5).slice(0, 3).map((r) => r.label.toLowerCase())) || 'no dimension rates high'} add little or nothing.`;
+    if (total > 30 && easy.length) text += ` It is easier on ${listJoin(easy.slice(0, 3))}.`;
+    if (ca && ca.n > 1) text += ` The ${prog.category.toLowerCase()} average is ${ca.avg}.`;
+    if (prog.confidence === 'Low') text += ' Confidence in these ratings is low, so treat this as a first pass.';
+    sum.textContent = text;
+    // chart
+    const W = chart.clientWidth || 600, rowH = 30;
+    chart.replaceChildren();
+    const svg = d3.select(chart).append('svg').attr('width', '100%');
+    const l = Math.min(measure(svg, rows.map((r) => r.label), 12) + 14, W * 0.42);
+    const H = rows.length * rowH + 24;
+    svg.attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    const x = d3.scaleLinear([0, 15], [l, W - 70]);
+    for (const t of [0, 5, 10, 15]) {
+      svg.append('line').attr('x1', x(t)).attr('x2', x(t)).attr('y1', 16).attr('y2', H).attr('stroke', 'var(--cds-chart-grid)');
+      svg.append('text').attr('x', x(t)).attr('y', 11).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(t);
+    }
+    const ramp = window.RC.ramp(); const tp = tip(chart);
+    rows.forEach((r, i) => {
+      const cy = 24 + i * rowH + rowH / 2 - 4;
+      svg.append('text').attr('x', l - 8).attr('y', cy + 4).attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg)').text(r.label);
+      svg.append('rect').attr('x', x(0)).attr('y', cy - 8).attr('width', x(r.weight) - x(0)).attr('height', 16).attr('rx', 4).attr('fill', 'var(--cds-chart-grid)');
+      svg.append('rect').attr('x', x(0)).attr('y', cy - 8).attr('width', Math.max(0, x(r.points) - x(0))).attr('height', 16).attr('rx', 4).attr('fill', ramp((r.rating - 1) / 4))
+        .on('mousemove', (e) => tp.show(e, r.label, [`Rating ${r.rating.toFixed(r.dimension === 'habit' ? 1 : 0)} of 5`, `Adds ${r.points} of ${r.weight} possible points`])).on('mouseleave', () => tp.hide());
+      svg.append('text').attr('x', x(r.weight) + 6).attr('y', cy + 4).attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(`${r.points} / ${r.weight}`);
+    });
+    // evidence
+    const notes = rs.status === 'ok' ? new Map(rs.data.filter((r) => r.program === program()).map((r) => [r.dimension, r.note])) : new Map();
+    ev.replaceChildren(...rows.map((r) => {
+      const li = document.createElement('li');
+      const d = document.createElement('span'); d.className = 'd'; d.textContent = r.label;
+      const rt = document.createElement('span'); rt.className = 'r'; rt.textContent = r.rating.toFixed(r.dimension === 'habit' ? 1 : 0) + ' / 5';
+      const xx = document.createElement('span'); xx.className = 'x';
+      let note = notes.get(r.dimension);
+      if (r.dimension === 'habit') note = (note ? note + ' ' : '') + (isAll() ? `Averaged across the four personas this rates ${r.rating.toFixed(1)}. Switch persona above to see how it changes.` : `For ${plabel().toLowerCase()} customers this rates ${r.rating.toFixed(1)}, based on how many of these habits they already have.`);
+      xx.textContent = note || 'No notable rules either way.'; if (!notes.get(r.dimension) && r.dimension !== 'habit') xx.classList.add('muted');
+      li.append(d, rt, xx); return li;
+    }));
+  }
+
+  function draw() {
+    for (const b of seg.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.p === persona()));
+    setWhere(); fillKpis(); drawLegends(); tables();
+    if (tab === 'overview') { drawLeague(); drawCats(); }
+    if (tab === 'why') drawWhy();
+    if (tab === 'breakdown') drawHeat();
+    if (tab === 'personas') drawDumbbell();
+    if (tab === 'fairness') drawScatter();
+    if (tab === 'network') drawNet();
+    if (tab === 'changes') drawTimeline();
+  }
+
+  dash.onData(draw);
+  const start = (location.hash || '').slice(1);
+  show(tabs.some((b) => b.dataset.tab === start) ? start : 'start');
+})();
+</script>
+
+
+<div class="site-foot">
+  <span>SA Rewards Complication Index · Data as of 19 October 2026 · Independent, not affiliated with any programme, not financial advice.</span>
+  <button type="button" id="rc-dl">Download the data</button>
+</div>
+
+</div>
+<script>document.getElementById('rc-dl').addEventListener('click', () => window.rcDownload());</script>
+</body>
+</html>
